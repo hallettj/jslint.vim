@@ -1,18 +1,29 @@
-/*global JSLINT load print */
+/*global JSLINT load readline print */
 
 load('fulljslint.js');
 
-    function to_array(o) {
-        var a = [], k;
-        for (k in o) {
-            if (o.hasOwnProperty(k)) {
-                a.push(k);
-            }
+var readSTDIN = function() {
+    var line, 
+        input = [], 
+        emptyCount = 0,
+        i;
+
+    line = readline();
+    while (emptyCount < 25) {
+        input.push(line);
+        if (line) {
+            emptyCount = 0;
+        } else {
+            emptyCount += 1;
         }
-        return a;
+        line = readline();
     }
 
-var body = arguments[0],
+    input.splice(-emptyCount);
+    return input.join("\n");
+};
+
+var body = readSTDIN() || arguments[0],
     result = JSLINT(body),
     i,
     error;
