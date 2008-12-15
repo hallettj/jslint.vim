@@ -6,7 +6,7 @@ function! JSlint()
     endif
 
     let s:errors = []
-    let s:jslint_output = system('js runjslint.js', join(getline(1, '$'), "\n"))
+    let s:jslint_output = system('js runjslint.js', join(getline(1, '$'), "\n") . "\n")
 
     for error in split(s:jslint_output, "\n")
         let s:parts = matchlist(error, "line\\s\\+\\(\\d\\+\\)\\s\\+")
