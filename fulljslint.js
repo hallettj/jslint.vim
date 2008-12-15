@@ -907,7 +907,7 @@ JSLINT = function () {
             id: '(error)',
             raw: m,
             evidence: lines[l] || '',
-            line: l,
+            line: l + 1,  // most line numbering schemes start at 1, not 0
             character: ch,
             a: a,
             b: b,
