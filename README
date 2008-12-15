@@ -3,6 +3,9 @@ delint.js
 
 VIM plugin and command line tool for running JSLint <http://jslint.com/>.
 
+JSLint is a handy tool that spots errors and common mistakes in 
+javascript code.
+
 This is alpha software and is under heavy development.
 
 
