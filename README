@@ -1,4 +1,4 @@
-delint.js
+jslint.vim
 =============
 
 VIM plugin and command line tool for running JSLint <http://jslint.com/>.
@@ -26,8 +26,8 @@ Installation and Use
   once the problems are corrected for an update.
 
 - To get a detailed report of any issues in your javascript file,
-  run the delinter from a terminal using Spidermonkey with this command:
-    $ cat <yourfile> | js runjslint.js
+  run jslint from a terminal using Spidermonkey with this command:
+    $ js runjslint.js < <yourfile>
 
 
 License
