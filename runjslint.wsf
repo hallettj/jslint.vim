@@ -1,0 +1,39 @@
+<job>
+<script src="fulljslint.js" language="javascript"></script>
+<script language="javascript">
+/*global JSLINT load readline WScript */
+
+var readSTDIN = function() {
+    var line, 
+        input = [], 
+        emptyCount = 0,
+        i;
+
+    var stdIn = WScript.stdIn,
+        stdOut = WScript.stdOut;
+
+    while (!stdIn.atEndofStream) {
+        line = stdIn.readLine();
+        input.push(line);
+    }
+
+    return input.join("\n");
+};
+
+var body = readSTDIN() || arguments[0],
+    result = JSLINT(body),
+    i,
+    error;
+
+if (result) {
+    WScript.echo('All good.');
+} else {
+    WScript.echo('Error:');
+    for (i = 0; i < JSLINT.errors.length; i++) {
+        error = JSLINT.errors[i];
+        WScript.echo('Problem at line ' + error.line + ' character ' + error.character + ': ' + error.reason);
+        WScript.echo(error.evidence);
+    }
+}
+</script>
+</job>
