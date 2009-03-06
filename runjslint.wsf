@@ -33,6 +33,7 @@ if (result) {
         error = JSLINT.errors[i];
         if (error) {
             WScript.echo('Problem at line ' + error.line + ' character ' + error.character + ': ' + error.reason);
+            WScript.echo(error.evidence);
         }
     }
 }
