@@ -31,8 +31,9 @@ if (result) {
     WScript.echo('Error:');
     for (i = 0; i < JSLINT.errors.length; i++) {
         error = JSLINT.errors[i];
-        WScript.echo('Problem at line ' + error.line + ' character ' + error.character + ': ' + error.reason);
-        WScript.echo(error.evidence);
+        if (error) {
+            WScript.echo('Problem at line ' + error.line + ' character ' + error.character + ': ' + error.reason);
+        }
     }
 }
 </script>
