@@ -6,7 +6,14 @@ function! JSlint()
     endif
 
     let s:errors = []
-    let s:jslint_output = system('js runjslint.js', join(getline(1, '$'), "\n") . "\n")
+
+    if has("win32")
+        let s:cmd = 'cscript runjslint.wsf'
+    else
+        let s:cmd = 'js runjslint.js'
+    endif
+
+    let s:jslint_output = system(s:cmd, join(getline(1, '$'), "\n") . "\n")
 
     for error in split(s:jslint_output, "\n")
         let s:parts = matchlist(error, "line\\s\\+\\(\\d\\+\\)\\s\\+")
