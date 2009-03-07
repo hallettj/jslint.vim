@@ -8,10 +8,14 @@ function! s:JSLint()
     let b:errors = []
 
     if has("win32")
-      let s:cmd = 'cscript runjslint.wsf'
+      let s:cmd = 'cscript'
+      let s:runjslint_ext = 'wsf'
     else
-      let s:cmd = 'js runjslint.js'
+      let s:cmd = 'js'
+      let s:runjslint_ext = 'js'
     endif
+    let s:plugin_path = expand("~/") . ".vim/ftplugin/javascript/"
+    let s:cmd = "cd " . s:plugin_path . " && " . s:cmd . " runjslint." . s:runjslint_ext
 
     let b:jslint_output = system(s:cmd, join(getline(1, '$'), "\n") . "\n")
 
@@ -24,6 +28,6 @@ function! s:JSLint()
 endfunction
 
 if !exists(":JSLint")
-  command JSLint :call s:JSlint()
+  command JSLint :call s:JSLint()
 endif
 
