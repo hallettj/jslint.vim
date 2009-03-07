@@ -1,26 +1,29 @@
-function! JSlint()
-    if exists('s:errors')
-        for error in s:errors
-            call matchdelete(error)
-        endfor
+function! s:JSLint()
+    if exists('b:errors')
+      for error in b:errors
+        call matchdelete(error)
+      endfor
     endif
 
-    let s:errors = []
+    let b:errors = []
 
     if has("win32")
-        let s:cmd = 'cscript runjslint.wsf'
+      let s:cmd = 'cscript runjslint.wsf'
     else
-        let s:cmd = 'js runjslint.js'
+      let s:cmd = 'js runjslint.js'
     endif
 
-    let s:jslint_output = system(s:cmd, join(getline(1, '$'), "\n") . "\n")
+    let b:jslint_output = system(s:cmd, join(getline(1, '$'), "\n") . "\n")
 
-    for error in split(s:jslint_output, "\n")
-        let s:parts = matchlist(error, "line\\s\\+\\(\\d\\+\\)\\s\\+")
-        if !empty(s:parts)
-            call add(s:errors, matchadd('Error', '\%'.s:parts[1].'l'))
-        endif
+    for error in split(b:jslint_output, "\n")
+      let b:parts = matchlist(error, "line\\s\\+\\(\\d\\+\\)\\s\\+")
+      if !empty(b:parts)
+        call add(b:errors, matchadd('Error', '\%'.b:parts[1].'l'))
+      endif
     endfor
 endfunction
 
-map <F5> :call JSlint()<CR>
+if !exists(":JSLint")
+  command JSLint :call s:JSlint()
+endif
+
