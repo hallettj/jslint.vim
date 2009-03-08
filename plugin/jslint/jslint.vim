@@ -1,4 +1,4 @@
-function! s:JSLint()
+function! s:JSLint() range
   if exists('b:errors')
     for error in b:errors
       call matchdelete(error)
@@ -6,6 +6,18 @@ function! s:JSLint()
   endif
 
   let b:errors = []
+
+  echo a:firstline
+  echo a:lastline
+
+  " Get range
+  if !(a:firstline == 1 && a:lastline == '$')
+    let b:firstline = a:firstline
+    let b:lastline = a:lastline
+  endif
+    echo :'<
+  echo b:firstline
+  echo b:lastline
 
   " Set up command and parameters
   let s:plugin_path = '"' . expand("~/") . '"'
@@ -22,7 +34,8 @@ function! s:JSLint()
   let s:cmd = "cd " . s:plugin_path . " && " . s:cmd . " " . s:plugin_path 
               \ . "runjslint." . s:runjslint_ext
 
-  let b:jslint_output = system(s:cmd, join(getline(1, '$'), "\n") . "\n")
+  let b:jslint_output = system(s:cmd, join(getline(b:firstline, b:lastline)
+              \ , "\n") . "\n")
 
   for error in split(b:jslint_output, "\n")
     let b:parts = matchlist(error, "line\\s\\+\\(\\d\\+\\)\\s\\+")
@@ -34,5 +47,5 @@ function! s:JSLint()
   endfor
 endfunction
 
-command! JSLint :call s:JSLint()
+command! -range=% JSLint :call s:JSLint()
 
