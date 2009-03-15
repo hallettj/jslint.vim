@@ -15,7 +15,7 @@ function! s:JSLint()
   " Set up command and parameters
   let s:plugin_path = '"' . expand("~/") . '"'
   if has("win32")
-    let s:cmd = 'cscript'
+    let s:cmd = 'cscript /NoLogo '
     let s:plugin_path = s:plugin_path . "vimfiles"
     let s:runjslint_ext = 'wsf'
   else
@@ -36,7 +36,7 @@ function! s:JSLint()
       " Add line to match list
       call add(b:errors, matchadd('Error', '\%'.b:parts[1].'l'))
       " Add to quickfix
-      caddexpr! expand("%") . ":" . b:parts[1] . ":" . b:parts[2] . ":" . b:parts[3]
+      caddexpr expand("%") . ":" . b:parts[1] . ":" . b:parts[2] . ":" . b:parts[3]
     endif
   endfor
 

@@ -31,8 +31,7 @@ if (!ok) {
     for (i = 0; i < errorCount; i += 1) {
         error = JSLINT.errors[i];
         if (error && error.reason && error.reason.match(/^Stopping/) === null) {
-            WScript.echo('line: ' + error.line + ', character: ' +
-                error.character + ', message: ' + error.reason);
+            WScript.echo([error.line, error.character, error.reason].join(":"));
         }
     }
 }
