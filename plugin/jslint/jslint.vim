@@ -12,18 +12,6 @@ function! s:JSLint()
   let b:errors = []
   let b:has_errors = 0
 
-  echo a:firstline
-  echo a:lastline
-
-  " Get range
-  if !(a:firstline == 1 && a:lastline == '$')
-    let b:firstline = a:firstline
-    let b:lastline = a:lastline
-  endif
-    echo :'<
-  echo b:firstline
-  echo b:lastline
-
   " Set up command and parameters
   let s:plugin_path = '"' . expand("~/") . '"'
   if has("win32")
@@ -37,9 +25,8 @@ function! s:JSLint()
   endif
   let s:plugin_path = s:plugin_path . "/plugin/jslint/"
   let s:cmd = "cd " . s:plugin_path . " && " . s:cmd . " " . s:plugin_path 
-
-  let b:jslint_output = system(s:cmd, join(getline(b:firstline, b:lastline)
-              \ , "\n") . "\n")
+               \ . "runjslint." . s:runjslint_ext
+  let b:jslint_output = system(s:cmd, join(getline(1, '$'), "\n") . "\n")
 
   for error in split(b:jslint_output, "\n")
     " Match {line}:{char}:{message}
@@ -61,5 +48,5 @@ function! s:JSLint()
   endif
 endfunction
 
-command! -range=% JSLint :call s:JSLint()
+command! JSLint :call s:JSLint()
 
