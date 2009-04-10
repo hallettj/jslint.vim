@@ -4,7 +4,7 @@ jslint.vim
 VIM plugin and command line tool for running JSLint <http://jslint.com/>.
 
 JSLint is a handy tool that spots errors and common mistakes in 
-javascript code.
+JavaScript code.
 
 This is alpha software and is under heavy development.
 
@@ -12,28 +12,47 @@ This is alpha software and is under heavy development.
 Installation and Use
 -----------------------
 
-- install the Spidermonkey standalone javascript interpreter
-    $ sudo apt-get install sipdermonkey-bin
+- Make sure you have a JavaScript interpreter installed. In Ubuntu you can
+  install the Spidermonkey shell with this command:
 
-- copy fulljslint.js, runjslint.js, and jslint.vim into your working 
-  directory
+        $ sudo apt-get install sipdermonkey-bin
 
-- in vim, run the following command:
-    :source jslint.vim
+  On Windows you can use `cscript.exe` - which is probably already installed.
 
-- Press <F5> to check any javascript file that you are working on
-  for problems. Problems will be highlighted in red. Press <F5> again
-  once the problems are corrected for an update.
+- Copy the directory plugin/jslint/ into your Vim plugin directory. Usually
+  this is `~/.vim/plugin/`. On Windows it is `~/vimfiles/plugin/`.
 
-- To get a detailed report of any issues in your javascript file,
-  run jslint from a terminal using Spidermonkey with this command:
-    $ js runjslint.js < <yourfile>
+- Open a JavaScript file in Vim and run the command `:JSLint` to check the
+  file. Potential errors will be highlighted in red. Run `:JSLint` again once
+  the errors are fixed to check the file again.
+
+- (optional) Add configuration to your `~/.vimrc` file to bind JSLint to a key.
+  For example:
+
+        " Run JSLint on the current file when <F5> is pressed.
+        map <F5> :call JSLint<CR>
+
+To get a detailed report of any issues in your JavaScript file, run the
+`bin/jslint` executable in a terminal. For example:
+
+      $ bin/jslint plugin/jslint/fulljslint.js
+
+You can copy `bin/jslint` into for `PATH` for easier access. The executable
+requires that the Vim plugin is installed and also requires Ruby.
+
+
+Credits
+---------
+
+- Jesse Hallett -- original author
+- Nathan Smith -- Windows compatibility and many other improvements
 
 
 License
 ---------
 
-Copyright (c) 2008 Jesse Hallett <hallettj@gmail.com>, except where otherwise noted
+Copyright (c) 2008-2009 Jesse Hallett <hallettj@gmail.com>, except where
+otherwise noted
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
