@@ -1,7 +1,7 @@
 jslint.vim
 =============
 
-VIM plugin and command line tool for running JSLint <http://jslint.com/>.
+Vim plugin and command line tool for running JSLint <http://jslint.com/>.
 
 JSLint is a handy tool that spots errors and common mistakes in 
 JavaScript code.
@@ -19,8 +19,12 @@ Installation and Use
 
   On Windows you can use `cscript.exe` - which is probably already installed.
 
-- Copy the directory plugin/jslint/ into your Vim plugin directory. Usually
-  this is `~/.vim/plugin/`. On Windows it is `~/vimfiles/plugin/`.
+- If you have rake installed, run:
+
+        $ rake install
+
+  Otherwise copy the directory plugin/jslint/ into your Vim plugin directory.
+  Usually this is `~/.vim/plugin/`. On Windows it is `~/vimfiles/plugin/`.
 
 - Open a JavaScript file in Vim and run the command `:JSLint` to check the
   file. Potential errors will be highlighted in red. Run `:JSLint` again once
@@ -46,6 +50,7 @@ Credits
 
 - Jesse Hallett -- original author
 - Nathan Smith -- Windows compatibility and many other improvements
+- Travis Jeffery -- Easy plugin installation with rake
 
 
 License
