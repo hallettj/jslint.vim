@@ -34,7 +34,7 @@ Installation and Use
   For example:
 
         " Run JSLint on the current file when <F5> is pressed.
-        map <F5> :call JSLint<CR>
+        map <F5> :JSLint<CR>
 
 To get a detailed report of any issues in your JavaScript file, run the
 `bin/jslint` executable in a terminal. For example:
