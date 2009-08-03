@@ -28,7 +28,7 @@ function! s:JSLint()
     let b:parts = matchlist(error, "line\\s\\+\\(\\d\\+\\)\\s\\+")
     if !empty(b:parts)
       call add(b:errors, matchadd('Error', '\%'.b:parts[1].'l'))
-    elseif error == "All Good."
+    elseif error ==? "All Good."
       echo "JSLint: " . error
     endif
   endfor
