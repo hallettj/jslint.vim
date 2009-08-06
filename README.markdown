@@ -27,11 +27,9 @@ Installation and Use
   Usually this is `~/.vim/plugin/`. On Windows it is `~/vimfiles/plugin/`.
 
 - Open a JavaScript file in Vim and run the command `:JSLint` to check the
-  file. Potential errors will be highlighted in red. Run `:JSLint` again once
-  the errors are fixed to check the file again.
-
-  If you run `:JSLint` with your cursor on a problem line you will see a
-  description of the problem echoed at the bottom of the screen.
+  file. If there are potential errors they will be highlighted in red and the
+  quickfix window will open. Run `:JSLint` again once the errors are fixed to
+  remove error highlighting and to close the quickfix window.
 
 - (optional) Add configuration to your `~/.vimrc` file to bind JSLint to a key.
   For example:
@@ -39,8 +37,8 @@ Installation and Use
         " Run JSLint on the current file when <F5> is pressed.
         map <F5> :JSLint<CR>
 
-To get a detailed report of any issues in your JavaScript file, run the
-`bin/jslint` executable in a terminal. For example:
+To get a detailed report of any issues in your JavaScript file outside of Vim,
+run the `bin/jslint` executable in a terminal. For example:
 
       $ bin/jslint plugin/jslint/fulljslint.js
 
@@ -48,13 +46,40 @@ You can copy `bin/jslint` into for `PATH` for easier access. The executable
 requires that the Vim plugin is installed and also requires Ruby.
 
 
+Working with quickfix
+-----------------------
+
+The quickfix window will display a list of all potential errors in the file
+with an explanation for each. Running `:JSLint` will automatically open the
+quickfix window if there are potential errors and will close it if no problems
+are detected.
+
+Note that the quickfix list will be cleared and regenerated every time you run
+`:JSLint`.
+
+Here are some quick notes for using quickfix:
+
+- In the quickfix window, moving your cursor over an item and pressing enter
+  will jump the cursor to that line in your file.
+
+- In either your file or the quickfix window `:cn` will jump the cursor to the
+  next potential error, and `:cp` will jump the cursor to the previous item.
+
+- Open and close the quickfix window with `:copen[n]` and `:cl[ose]`.
+
+You can find more detailed documentation in the [Vim Reference Manual][quickfix
+manual].
+
+[quickfix manual]: http://www.vim.org/htmldoc/quickfix.html
+
+
 Credits
 ---------
 
 - Jesse Hallett -- original author
-- Nathan Smith -- Windows compatibility and many other improvements
+- Nathan Smith -- Windows compatibility, quickfix integration, and many other improvements
 - Travis Jeffery -- Easy plugin installation with rake
-- Sam Goldstein -- Display of problem report for the current line
+- Sam Goldstein -- Display of problem report for the current line and bug fixes
 
 
 License
