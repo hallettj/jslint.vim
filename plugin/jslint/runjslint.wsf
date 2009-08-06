@@ -21,21 +21,20 @@ var readSTDIN = function() {
 };
 
 var body = readSTDIN() || arguments[0],
-    result = JSLINT(body),
+    ok = JSLINT(body),
     i,
-    error;
-
-if (result) {
-    WScript.echo('All good.');
-} else {
-    WScript.echo('Error:');
-    for (i = 0; i < JSLINT.errors.length; i++) {
+    error,
+    errorCount;
+ 
+if (!ok) {
+    errorCount = JSLINT.errors.length;
+    for (i = 0; i < errorCount; i += 1) {
         error = JSLINT.errors[i];
-        if (error) {
-            WScript.echo('Problem at line ' + error.line + ' character ' + error.character + ': ' + error.reason);
-            WScript.echo(error.evidence);
+        if (error && error.reason && error.reason.match(/^Stopping/) === null) {
+            WScript.echo([error.line, error.character, error.reason].join(":"));
         }
     }
 }
 </script>
 </job>
+ 

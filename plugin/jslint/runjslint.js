@@ -24,17 +24,18 @@ var readSTDIN = function() {
 };
 
 var body = readSTDIN() || arguments[0],
-    result = JSLINT(body),
+    ok = JSLINT(body),
     i,
-    error;
+    error,
+    errorCount;
 
-if (result) {
-    print('All good.');
-} else {
-    print('Error:');
-    for (i = 0; i < JSLINT.errors.length; i++) {
+if (!ok) {
+    errorCount = JSLINT.errors.length;
+    for (i = 0; i < errorCount; i += 1) {
         error = JSLINT.errors[i];
-        print('Problem at line ' + error.line + ' character ' + error.character + ': ' + error.reason);
-        print(error.evidence);
+        if (error && error.reason && error.reason.match(/^Stopping/) === null) {
+            print([error.line, error.character, error.reason].join(":"));
+        }
     }
 }
+
