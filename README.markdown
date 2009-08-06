@@ -30,6 +30,9 @@ Installation and Use
   file. Potential errors will be highlighted in red. Run `:JSLint` again once
   the errors are fixed to check the file again.
 
+  If you run `:JSLint` with your cursor on a problem line you will see a
+  description of the problem echoed at the bottom of the screen.
+
 - (optional) Add configuration to your `~/.vimrc` file to bind JSLint to a key.
   For example:
 
@@ -51,6 +54,7 @@ Credits
 - Jesse Hallett -- original author
 - Nathan Smith -- Windows compatibility and many other improvements
 - Travis Jeffery -- Easy plugin installation with rake
+- Sam Goldstein -- Display of problem report for the current line
 
 
 License
