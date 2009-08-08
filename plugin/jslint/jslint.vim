@@ -1,4 +1,4 @@
-function! s:JSLint() range
+function! s:JSLint(args) range
   cclose " Close quickfix window
   cexpr [] " Create empty quickfix list
 
@@ -37,6 +37,7 @@ function! s:JSLint() range
 
   let b:errors = []
   let b:has_errors = 0
+  let b:error_under_cursor = 'No error on current line' "default
 
   for error in split(b:jslint_output, "\n")
     " Match {line}:{char}:{message}
@@ -46,6 +47,12 @@ function! s:JSLint() range
       let l:line = b:parts[1] + (b:firstline - 1) " Get line relative to selection
       " Add line to match list
       call add(b:errors, matchadd('Error', '\%' . l:line . 'l'))
+
+      " Store the error for an error under the cursor
+      if l:line == line('.')
+         let b:error_under_cursor = 'Line '. l:line .': '.b:parts[3]
+      endif
+
       " Add to quickfix
       caddexpr expand("%") . ":" . l:line . ":" . b:parts[2] . ":" . b:parts[3]
     endif
@@ -53,11 +60,18 @@ function! s:JSLint() range
 
   " Open the quickfix window if errors are present
   if b:has_errors == 1
-    copen
-  else " Or not
+    if a:args == "qf"
+      copen
+    elseif a:args == "echo"
+      echo b:error_under_cursor
+    endif
+  else
     echo "JSLint: All good."
   endif
 endfunction
 
-command! -range JSLint <line1>,<line2>call s:JSLint()
+" Highlight errors and echo error under cursor
+command! -range JSLintLight <line1>,<line2>call s:JSLint("echo")
+" Highlight errors and open quick fix window
+command! -range JSLint <line1>,<line2>call s:JSLint("qf")
 
