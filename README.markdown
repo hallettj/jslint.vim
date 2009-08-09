@@ -15,7 +15,7 @@ Installation and Use
 - Make sure you have a JavaScript interpreter installed. In Ubuntu you can
   install the Spidermonkey shell with this command:
 
-        $ sudo apt-get install sipdermonkey-bin
+        $ sudo apt-get install spidermonkey-bin
 
   On Windows you can use `cscript.exe` - which is probably already installed.
 
