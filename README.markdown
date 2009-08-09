@@ -26,15 +26,32 @@ Installation and Use
   Otherwise copy the directory plugin/jslint/ into your Vim plugin directory.
   Usually this is `~/.vim/plugin/`. On Windows it is `~/vimfiles/plugin/`.
 
-- Open a JavaScript file in Vim and run the command `:JSLint` to check the
-  file. If there are potential errors they will be highlighted in red and the
-  quickfix window will open. Run `:JSLint` again once the errors are fixed to
-  remove error highlighting and to close the quickfix window.
+- Simple mode:
+
+  - Open a JavaScript file in Vim and run the command `:JSLintLight` to check
+    the file. If there are potential errors they will be highlighted in red. If
+    there is an error on the line under the cursor an explanation of that error
+    will be printed at the bottom of the screen.
+    
+    Run `:JSLintLight` again once the errors are fixed to remove error
+    highlighting.
+
+- Quickfix mode:
+
+  - Open a JavaScript file in Vim and run the command `:JSLint` to check the
+    file. If there are potential errors they will be highlighted in red and the
+    quickfix window will open.
+    
+    Run `:JSLint` again once the errors are fixed to remove error highlighting
+    and to close the quickfix window.
 
 - (optional) Add configuration to your `~/.vimrc` file to bind JSLint to a key.
   For example:
 
-        " Run JSLint on the current file when <F5> is pressed.
+        " Run JSLint on the current file in simple mode when <F4> is pressed.
+        map <F4> :JSLintLight<CR>
+
+        " Run JSLint on the current file with quickfix when <F5> is pressed.
         map <F5> :JSLint<CR>
 
 To get a detailed report of any issues in your JavaScript file outside of Vim,
