@@ -3,7 +3,7 @@ jslint.vim
 
 Vim plugin and command line tool for running JSLint <http://jslint.com/>.
 
-JSLint is a handy tool that spots errors and common mistakes in 
+JSLint is a handy tool that spots errors and common mistakes in
 JavaScript code.
 
 This is alpha software and is under heavy development.
@@ -28,22 +28,22 @@ Installation and Use
 
 - Simple mode:
 
-  - Open a JavaScript file in Vim and run the command `:JSLintLight` to check
-    the file. If there are potential errors they will be highlighted in red. If
-    there is an error on the line under the cursor an explanation of that error
-    will be printed at the bottom of the screen.
-    
-    Run `:JSLintLight` again once the errors are fixed to remove error
-    highlighting.
+    *   Open a JavaScript file in Vim and run the command `:JSLintLight` to
+        check the file. If there are potential errors they will be highlighted
+        in red.  If there is an error on the line under the cursor an
+        explanation of that error will be printed at the bottom of the screen.
+
+        Run `:JSLintLight` again once the errors are fixed to remove error
+        highlighting.
 
 - Quickfix mode:
 
-  - Open a JavaScript file in Vim and run the command `:JSLint` to check the
-    file. If there are potential errors they will be highlighted in red and the
-    quickfix window will open.
-    
-    Run `:JSLint` again once the errors are fixed to remove error highlighting
-    and to close the quickfix window.
+    *   Open a JavaScript file in Vim and run the command `:JSLint` to check
+        the file. If there are potential errors they will be highlighted in red
+        and the quickfix window will open.
+
+        Run `:JSLint` again once the errors are fixed to remove error
+        highlighting and to close the quickfix window.
 
 - (optional) Add configuration to your `~/.vimrc` file to bind JSLint to a key.
   For example:
