@@ -82,7 +82,7 @@ Here are some quick notes for using quickfix:
 - In either your file or the quickfix window `:cn` will jump the cursor to the
   next potential error, and `:cp` will jump the cursor to the previous item.
 
-- Open and close the quickfix window with `:copen[n]` and `:cl[ose]`.
+- Open and close the quickfix window with `:copen[n]` and `:ccl[ose]`.
 
 You can find more detailed documentation in the [Vim Reference Manual][quickfix
 manual].
