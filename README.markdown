@@ -97,6 +97,7 @@ Credits
 - Nathan Smith -- Windows compatibility, quickfix integration, and many other improvements
 - Travis Jeffery -- Easy plugin installation with rake
 - Sam Goldstein -- Display of problem report for the current line and bug fixes
+- Bryan Chow -- Fixes for formatting issues and typos
 
 
 License
