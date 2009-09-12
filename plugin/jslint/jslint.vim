@@ -25,7 +25,11 @@ function! s:JSLint(args) range
     let s:plugin_path = s:plugin_path . "vimfiles"
     let s:runjslint_ext = 'wsf'
   else
-    let s:cmd = 'js'
+    if has("gui_macvim")
+      let s:cmd = '/System/Library/Frameworks/JavaScriptCore.framework/Resources/jsc'
+    else
+      let s:cmd = 'js'
+    endif
     let s:plugin_path = s:plugin_path . ".vim"
     let s:runjslint_ext = 'js'
   endif
