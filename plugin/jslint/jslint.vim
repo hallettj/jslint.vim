@@ -32,7 +32,13 @@ function! s:JSLint(args) range
   let s:plugin_path = s:plugin_path . "/plugin/jslint/"
   let s:cmd = "cd " . s:plugin_path . " && " . s:cmd . " " . s:plugin_path 
                \ . "runjslint." . s:runjslint_ext
-  let b:jslint_output = system(s:cmd, join(getline(b:firstline, b:lastline), 
+  let s:jslintrc_file = expand('~/.jslintrc')
+  if filereadable(s:jslintrc_file)
+    let s:jslintrc = readfile(s:jslintrc_file)
+  else
+    let s:jslintrc = []
+  end
+  let b:jslint_output = system(s:cmd, join(s:jslintrc + getline(b:firstline, b:lastline),
               \ "\n") . "\n")
 
   let b:errors = []
@@ -44,7 +50,7 @@ function! s:JSLint(args) range
     let b:parts = matchlist(error, "\\(\\d\\+\\):\\(\\d\\+\\):\\(.*\\)")
     if !empty(b:parts)
       let b:has_errors = 1
-      let l:line = b:parts[1] + (b:firstline - 1) " Get line relative to selection
+      let l:line = b:parts[1] + (b:firstline - 1 - len(s:jslintrc)) " Get line relative to selection
       " Add line to match list
       call add(b:errors, matchadd('Error', '\%' . l:line . 'l'))
 
