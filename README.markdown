@@ -45,6 +45,15 @@ Installation and Use
         Run `:JSLint` again once the errors are fixed to remove error
         highlighting and to close the quickfix window.
 
+- (optional) Add any valid JSLint options to `~/.jslintrc` file, they will be
+  used as global options for all JavaScript file.
+  For example:
+
+        /*jslint browser: true, regexp: true */
+        /*global jQuery, $ */
+
+        /* vim: set ft=javascript: */
+
 - (optional) Add configuration to your `~/.vimrc` file to bind JSLint to a key.
   For example:
 
