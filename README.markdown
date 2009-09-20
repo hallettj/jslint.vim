@@ -109,6 +109,26 @@ manual].
 [quickfix manual]: http://www.vim.org/htmldoc/quickfix.html
 
 
+Alternative Plugins
+---------------------
+
+There are other plugins for Vim that integrate [JavaScript Lint][].  JavaScript
+Lint is another JavaScript checker that is similar to JSLint.
+
+[JavaScript Lint]: http://www.javascriptlint.com/
+
+[jsl.vim][] uses Vim's compiler infrastructure making its use consistent with
+syntax checkers for other languages.
+
+[jsl.vim]: http://www.vim.org/scripts/script.php?script_id=2630
+
+[javaScriptLint.vim][] runs the contents of a JavaScript file through
+JavaScript Lint after the file's buffer is saved and places any warnings in the
+quickfix error window.
+
+[javaScriptLint.vim]: http://www.vim.org/scripts/script.php?script_id=2578
+
+
 Credits
 ---------
 
