@@ -94,7 +94,8 @@ Credits
 ---------
 
 - Jesse Hallett -- original author
-- Nathan Smith -- Windows compatibility, quickfix integration, and many other improvements
+- Nathan Smith -- Windows compatibility, quickfix integration, better OS X
+  compatibility, and many other improvements
 - Travis Jeffery -- Easy plugin installation with rake
 - Sam Goldstein -- Display of problem report for the current line and bug fixes
 - Bryan Chow -- Fixes for formatting issues and typos
