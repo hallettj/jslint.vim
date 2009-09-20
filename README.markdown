@@ -57,10 +57,15 @@ Installation and Use
 To get a detailed report of any issues in your JavaScript file outside of Vim,
 run the `bin/jslint` executable in a terminal. For example:
 
-      $ bin/jslint plugin/jslint/fulljslint.js
+    $ bin/jslint plugin/jslint/fulljslint.js
 
 You can copy `bin/jslint` into for `PATH` for easier access. The executable
 requires that the Vim plugin is installed and also requires Ruby.
+
+To clear highlighted errors run `:JSLintClear`.  To disable error highlighting
+altogether add this line to your `~/.vimrc` file:
+
+    let g:JSLintHighlightErrorLine = 0 
 
 
 Working with quickfix
@@ -99,6 +104,7 @@ Credits
 - Travis Jeffery -- Easy plugin installation with rake
 - Sam Goldstein -- Display of problem report for the current line and bug fixes
 - Bryan Chow -- Fixes for formatting issues and typos
+- Jeff Buttars -- Options to remove and to disable error highlighting
 
 
 License
