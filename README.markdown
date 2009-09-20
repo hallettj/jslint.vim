@@ -1,10 +1,15 @@
 jslint.vim
 =============
 
-Vim plugin and command line tool for running JSLint <http://jslint.com/>.
+Vim plugin and command line tool for running [JSLint][].
+
+[JSLint]: http://jslint.com/
 
 JSLint is a handy tool that spots errors and common mistakes in
 JavaScript code.
+
+The source code for jslint.vim is hosted at
+<http://github.com/hallettj/jslint.vim>.
 
 This is alpha software and is under heavy development.
 
