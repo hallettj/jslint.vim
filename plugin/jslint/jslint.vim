@@ -6,23 +6,85 @@
 " To disable the highlighting put the line
 " let g:JSLintHighlightErrorLine = 0
 " in your .vimrc
+"
+if exists("b:did_jslint_plugin")
+    finish
+else
+    let b:did_jslint_plugin = 1
+endif
+
+au BufLeave <buffer> call s:JSLintClear()
+
+au BufEnter <buffer> call s:JSLint()
+au InsertLeave <buffer> call s:JSLint()
+au InsertEnter <buffer> call s:JSLint()
+au BufWritePost <buffer> call s:JSLint()
+
+au CursorHold <buffer> call s:JSLint()
+au CursorHoldI <buffer> call s:JSLint()
+
+au CursorHold <buffer> call s:GetJSLintMessage()
+au CursorMoved <buffer> call s:GetJSLintMessage()
+
 if !exists("g:JSLintHighlightErrorLine")
   let g:JSLintHighlightErrorLine = 1
 endif
 
+if !exists("*s:JSLintUpdate")
+    function s:JSLintUpdate()
+        silent call s:JSLint()
+        call s:GetJSLintMessage()
+    endfunction
+endif
+
+if !exists(":JSLintUpdate")
+    command JSLintUpdate :call s:JSLintUpdate()
+endif
+
+noremap <buffer><silent> dd dd:JSLintUpdate<CR>
+noremap <buffer><silent> dw dw:JSLintUpdate<CR>
+noremap <buffer><silent> u u:JSLintUpdate<CR>
+noremap <buffer><silent> <C-R> <C-R>:JSLintUpdate<CR>
+
+
+" WideMsg() prints [long] message up to (&columns-1) length
+" guaranteed without "Press Enter" prompt.
+if !exists("*s:WideMsg")
+    function s:WideMsg(msg)
+        let x=&ruler | let y=&showcmd
+        set noruler noshowcmd
+        redraw
+        echo a:msg
+        let &ruler=x | let &showcmd=y
+    endfun
+endif
+
+
 function! s:JSLintClear()
   " Delete previous matches
-  if exists('b:errors')
-    for error in b:errors
-      call matchdelete(error)
-    endfor
-  endif
+  let s:matches = getmatches()
+  for s:matchId in s:matches
+    if s:matchId['group'] == 'JSLintError'
+        call matchdelete(s:matchId['id'])
+    endif
+  endfor
+  let b:matched = []
+  let b:matchedlines = {}
+  let b:cleared = 1
 endfunction
 
-function! s:JSLint(args) range
+function! s:JSLint()
   highlight link JSLintError SpellBad
-  cclose " Close quickfix window
-  cexpr [] " Create empty quickfix list
+
+  if exists("b:cleared")
+      if b:cleared == 0
+          call s:JSLintClear()
+      endif
+      let b:cleared = 1
+  endif
+
+  let b:matched = []
+  let b:matchedlines = {}
 
   " Detect range
   if a:firstline == a:lastline
@@ -33,12 +95,6 @@ function! s:JSLint(args) range
     let b:lastline = a:lastline
   endif
 
-  " Delete previous matches
-  if exists('b:errors')
-    for error in b:errors
-      call matchdelete(error)
-    endfor
-  endif
 
   " Set up command and parameters
   let s:plugin_path = '"' . expand("~/") . '"'
@@ -55,7 +111,7 @@ function! s:JSLint(args) range
     let s:plugin_path = s:plugin_path . ".vim"
     let s:runjslint_ext = 'js'
   endif
-  let s:plugin_path = s:plugin_path . "/plugin/jslint/"
+  let s:plugin_path = s:plugin_path . "/ftplugin/javascript/"
   let s:cmd = "cd " . s:plugin_path . " && " . s:cmd . " " . s:plugin_path 
                \ . "runjslint." . s:runjslint_ext
   let s:jslintrc_file = expand('~/.jslintrc')
@@ -67,47 +123,50 @@ function! s:JSLint(args) range
   let b:jslint_output = system(s:cmd, join(s:jslintrc + getline(b:firstline, b:lastline),
               \ "\n") . "\n")
 
-  let b:errors = []
-  let b:has_errors = 0
-  let b:error_under_cursor = 'No error on current line' "default
-
   for error in split(b:jslint_output, "\n")
+      
     " Match {line}:{char}:{message}
     let b:parts = matchlist(error, "\\(\\d\\+\\):\\(\\d\\+\\):\\(.*\\)")
     if !empty(b:parts)
-      let b:has_errors = 1
       let l:line = b:parts[1] + (b:firstline - 1 - len(s:jslintrc)) " Get line relative to selection
-      " Add line to match list
-	  if g:JSLintHighlightErrorLine == 1
-	    call add(b:errors, matchadd('JSLintError', '\%' . l:line . 'l'))
-	  endif
 
-      " Store the error for an error under the cursor
-      if l:line == line('.')
-        let b:error_under_cursor = 'Line '. l:line .': '.b:parts[3]
+        " Store the error for an error under the cursor
+      let s:matchDict = {}
+      let s:matchDict['lineNum'] = l:line
+      let s:matchDict['message'] = b:parts[3]
+      let b:matchedlines[l:line] = s:matchDict
+      if g:JSLintHighlightErrorLine == 1
+          let s:mID = matchadd('JSLintError', '\%' . l:line . 'l\n\@!')
       endif
-
-      " Add to quickfix
-      caddexpr expand("%") . ":" . l:line . ":" . b:parts[2] . ":" . b:parts[3]
+      " Add line to match list
+      call add(b:matched, s:matchDict)
     endif
   endfor
-
-  " Open the quickfix window if errors are present
-  if b:has_errors == 1
-    if a:args == "qf"
-      copen
-    elseif a:args == "echo"
-      echo b:error_under_cursor
-    endif
-  else
-    echo "JSLint: All good."
-  endif
+  let b:cleared = 0
 endfunction
 
-" Highlight errors and echo error under cursor
-command! -range JSLintLight <line1>,<line2>call s:JSLint("echo")
-" Highlight errors and open quick fix window
-command! -range JSLint <line1>,<line2>call s:JSLint("qf")
-" Un Highlight errors
-command! JSLintClear call s:JSLintClear()
+let b:showing_message = 0
+
+if !exists("*s:GetJSLintMessage")
+    function s:GetJSLintMessage()
+        let s:cursorPos = getpos(".")
+
+        " Bail if RunJSLint hasn't been called yet
+        if !exists('b:matchedlines')
+            return
+        endif
+
+        if has_key(b:matchedlines, s:cursorPos[1])
+            let s:jslintMatch = get(b:matchedlines, s:cursorPos[1])
+            call s:WideMsg(s:jslintMatch['message'])
+            let b:showing_message = 1
+            return
+        endif
+
+        if b:showing_message == 1
+            echo
+            let b:showing_message = 0
+        endif
+    endfunction
+endif
 
