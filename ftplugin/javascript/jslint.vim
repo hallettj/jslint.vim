@@ -111,7 +111,7 @@ function! s:JSLint()
     let s:plugin_path = s:plugin_path . ".vim"
     let s:runjslint_ext = 'js'
   endif
-  let s:plugin_path = s:plugin_path . "/ftplugin/javascript/"
+  let s:plugin_path = s:plugin_path . "/ftplugin/javascript/jslint/"
   let s:cmd = "cd " . s:plugin_path . " && " . s:cmd . " " . s:plugin_path 
                \ . "runjslint." . s:runjslint_ext
   let s:jslintrc_file = expand('~/.jslintrc')
