@@ -20,6 +20,7 @@ function! s:JSLintClear()
 endfunction
 
 function! s:JSLint(args) range
+  highlight link JSLintError SpellBad
   cclose " Close quickfix window
   cexpr [] " Create empty quickfix list
 
@@ -78,7 +79,7 @@ function! s:JSLint(args) range
       let l:line = b:parts[1] + (b:firstline - 1 - len(s:jslintrc)) " Get line relative to selection
       " Add line to match list
 	  if g:JSLintHighlightErrorLine == 1
-	    call add(b:errors, matchadd('Error', '\%' . l:line . 'l'))
+	    call add(b:errors, matchadd('JSLintError', '\%' . l:line . 'l'))
 	  endif
 
       " Store the error for an error under the cursor
