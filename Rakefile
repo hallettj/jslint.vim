@@ -6,6 +6,7 @@ require 'find'
 require 'pathname'
 
 PLUGIN = [
+<<<<<<< HEAD
   "ftplugin/javascript/jslint.vim",
   "ftplugin/javascript/jslint/fulljslint.js",
   "ftplugin/javascript/jslint/runjslint.js",

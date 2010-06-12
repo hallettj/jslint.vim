@@ -145,6 +145,7 @@ Credits
 - Bryan Chow -- Fixes for formatting issues and typos
 - Jeff Buttars -- Options to remove and to disable error highlighting
 - Rainux Luo -- Support for reading JSLint options from a `~/.jslintrc` file
+- Pascal Hartig -- Support for running jslint with rhino
 
 
 License
