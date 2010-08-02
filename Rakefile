@@ -6,10 +6,11 @@ require 'find'
 require 'pathname'
 
 PLUGIN = [
-  "ftplugin/javascript/fulljslint.js",
   "ftplugin/javascript/jslint.vim",
-  "ftplugin/javascript/runjslint.js",
-  "ftplugin/javascript/runjslint.wsf",
+  "ftplugin/javascript/jslint/fulljslint.js",
+  "ftplugin/javascript/jslint/runjslint.js",
+  "ftplugin/javascript/jslint/runjslint.wsf",
+  "ftplugin/javascript/jslint/runjslint.rhino.js",
   "README.markdown",
   "LICENSE"
 ]
@@ -39,7 +40,7 @@ task :install do
              else
                File.expand_path("~/.vim")
              end
-  target_dir = File.join(vimfiles, 'ftplugin', 'javascript')
+  target_dir = File.join(vimfiles, 'ftplugin', 'javascript', 'jslint')
   FileUtils.mkdir_p target_dir
   files.each do |file|
     FileUtils.cp file, target_dir
