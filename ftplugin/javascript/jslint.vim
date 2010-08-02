@@ -48,6 +48,32 @@ noremap <buffer><silent> dw dw:JSLintUpdate<CR>
 noremap <buffer><silent> u u:JSLintUpdate<CR>
 noremap <buffer><silent> <C-R> <C-R>:JSLintUpdate<CR>
 
+" Set up command and parameters
+if has("win32")
+  let s:cmd = 'cscript /NoLogo '
+  let s:plugin_path = s:plugin_path . "vimfiles"
+  let s:runjslint_ext = 'wsf'
+else
+  if executable('/System/Library/Frameworks/JavaScriptCore.framework/Resources/jsc')
+    let s:cmd = '/System/Library/Frameworks/JavaScriptCore.framework/Resources/jsc'
+    let s:runjslint_ext = 'js'
+  elseif executable('js')
+    let s:cmd = 'js'
+    let s:runjslint_ext = 'js'
+  else
+    echoerr('No JS interpreter found. Checked for jsc, js (spidermonkey)')
+  endif
+endif
+let s:plugin_path = s:install_dir . "/jslint/"
+let s:cmd = "cd " . s:plugin_path . " && " . s:cmd . " " . s:plugin_path . "runjslint." . s:runjslint_ext
+
+let s:jslintrc_file = expand('~/.jslintrc')
+if filereadable(s:jslintrc_file)
+  let s:jslintrc = readfile(s:jslintrc_file)
+else
+  let s:jslintrc = []
+end
+
 
 " WideMsg() prints [long] message up to (&columns-1) length
 " guaranteed without "Press Enter" prompt.
@@ -98,32 +124,9 @@ function! s:JSLint()
   endif
 
 
-  " Set up command and parameters
-  if has("win32")
-    let s:cmd = 'cscript /NoLogo '
-    let s:plugin_path = s:plugin_path . "vimfiles"
-    let s:runjslint_ext = 'wsf'
-  else
-    if filereadable('/System/Library/Frameworks/JavaScriptCore.framework/Resources/jsc')
-      let s:cmd = '/System/Library/Frameworks/JavaScriptCore.framework/Resources/jsc'
-    else
-      let s:cmd = 'js'
-    endif
-    let s:runjslint_ext = 'js'
-  endif
-  let s:plugin_path = s:install_dir . "/jslint/"
-  let s:cmd = "cd " . s:plugin_path . " && " . s:cmd . " " . s:plugin_path 
-               \ . "runjslint." . s:runjslint_ext
-  let s:jslintrc_file = expand('~/.jslintrc')
-  if filereadable(s:jslintrc_file)
-    let s:jslintrc = readfile(s:jslintrc_file)
-  else
-    let s:jslintrc = []
-  end
-  let b:jslint_output = system(s:cmd, join(s:jslintrc + getline(b:firstline, b:lastline),
-              \ "\n") . "\n")
+  let b:jslint_output = system(s:cmd, join(s:jslintrc + getline(b:firstline, b:lastline), "\n") . "\n")
   if v:shell_error
-     echo 'could not invoke JSLint!'
+     echoerr 'could not invoke JSLint!'
   end
 
   for error in split(b:jslint_output, "\n")
