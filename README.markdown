@@ -22,14 +22,19 @@ Installation and Use
 
         $ sudo apt-get install spidermonkey-bin
 
+  Latest Ubuntu versions don't have spidermonkey in the default repositories.
+  You can use rhino instead:
+
+		$ sudo apt-get install rhino
+
   On Windows you can use `cscript.exe` - which is probably already installed.
 
 - If you have rake installed, run:
 
         $ rake install
 
-  Otherwise copy the directory plugin/jslint/ into your Vim plugin directory.
-  Usually this is `~/.vim/plugin/`. On Windows it is `~/vimfiles/plugin/`.
+  Otherwise copy the directory ftplugin/ into your Vim ftplugin directory.
+  Usually this is `~/.vim/ftplugin/`. On Windows it is `~/vimfiles/ftplugin/`.
 
 - Simple mode:
 
@@ -71,7 +76,7 @@ Installation and Use
 To get a detailed report of any issues in your JavaScript file outside of Vim,
 run the `bin/jslint` executable in a terminal. For example:
 
-    $ bin/jslint plugin/jslint/fulljslint.js
+    $ bin/jslint ftplugin/jslint/fulljslint.js
 
 You can copy `bin/jslint` into for `PATH` for easier access. The executable
 requires that the Vim plugin is installed and also requires Ruby.
