@@ -13,6 +13,8 @@ else
     let b:did_jslint_plugin = 1
 endif
 
+let s:install_dir = expand("<sfile>:p:h")
+
 au BufLeave <buffer> call s:JSLintClear()
 
 au BufEnter <buffer> call s:JSLint()
@@ -97,7 +99,6 @@ function! s:JSLint()
 
 
   " Set up command and parameters
-  let s:plugin_path = '"' . expand("~/") . '"'
   if has("win32")
     let s:cmd = 'cscript /NoLogo '
     let s:plugin_path = s:plugin_path . "vimfiles"
@@ -108,10 +109,9 @@ function! s:JSLint()
     else
       let s:cmd = 'js'
     endif
-    let s:plugin_path = s:plugin_path . ".vim"
     let s:runjslint_ext = 'js'
   endif
-  let s:plugin_path = s:plugin_path . "/ftplugin/javascript/jslint/"
+  let s:plugin_path = s:install_dir . "/jslint/"
   let s:cmd = "cd " . s:plugin_path . " && " . s:cmd . " " . s:plugin_path 
                \ . "runjslint." . s:runjslint_ext
   let s:jslintrc_file = expand('~/.jslintrc')
@@ -122,9 +122,11 @@ function! s:JSLint()
   end
   let b:jslint_output = system(s:cmd, join(s:jslintrc + getline(b:firstline, b:lastline),
               \ "\n") . "\n")
+  if v:shell_error
+     echo 'could not invoke JSLint!'
+  end
 
   for error in split(b:jslint_output, "\n")
-      
     " Match {line}:{char}:{message}
     let b:parts = matchlist(error, "\\(\\d\\+\\):\\(\\d\\+\\):\\(.*\\)")
     if !empty(b:parts)
