@@ -1,27 +1,53 @@
-/*global JSLINT load readline print */
+/*global JSLINT load readline print laxbreak:true */
 
 load('fulljslint.js');
 
-var readSTDIN = function() {
-    var line, 
-        input = [], 
-        emptyCount = 0,
-        i;
+// Import extra libraries if running in Rhino.
+if (typeof importPackage != 'undefined') {
+    importPackage(java.io);
+    importPackage(java.lang);
+}
 
-    line = readline();
-    while (emptyCount < 25) {
-        input.push(line);
-        if (line) {
-            emptyCount = 0;
-        } else {
-            emptyCount += 1;
-        }
-        line = readline();
+var readSTDIN = (function() {
+    // readSTDIN() definition for Rhino
+    if (typeof BufferedReader != 'undefined') {
+        return function readSTDIN() {
+            // setup the input buffer and output buffer
+            var stdin = new BufferedReader(new InputStreamReader(System['in'])),
+                lines = [];
+
+            // read stdin buffer until EOF (or skip)
+            while (stdin.ready()){
+                lines.push(stdin.readLine());
+            }
+
+            return lines.join('\n');
+        };
+
+    // readSTDIN() definition for Spidermonkey
+    } else if (typeof readline != 'undefined') {
+        return function readSTDIN() {
+            var line
+              , input = []
+              , emptyCount = 0
+              , i;
+
+            line = readline();
+            while (emptyCount < 25) {
+                input.push(line);
+                if (line) {
+                    emptyCount = 0;
+                } else {
+                    emptyCount += 1;
+                }
+                line = readline();
+            }
+
+            input.splice(-emptyCount);
+            return input.join("\n");
+        };
     }
-
-    input.splice(-emptyCount);
-    return input.join("\n");
-};
+})();
 
 var body = readSTDIN() || arguments[0],
     ok = JSLINT(body),
@@ -38,4 +64,3 @@ if (!ok) {
         }
     }
 }
-

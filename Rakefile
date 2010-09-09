@@ -11,7 +11,6 @@ PLUGIN = [
   "ftplugin/javascript/jslint/fulljslint.js",
   "ftplugin/javascript/jslint/runjslint.js",
   "ftplugin/javascript/jslint/runjslint.wsf",
-  "ftplugin/javascript/jslint/runjslint.rhino.js",
   "README.markdown",
   "LICENSE"
 ]

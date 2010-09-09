@@ -60,8 +60,6 @@ else
   elseif executable('js')
     let s:cmd = 'js'
     let s:runjslint_ext = 'js'
-    " TODO: If js is not spidermonkey but Rhino we are screwed. Need a way to
-    " find out what we're dealing with.
   else
     echoerr('No JS interpreter found. Checked for jsc, js (spidermonkey)')
   endif
