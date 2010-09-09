@@ -17,20 +17,27 @@ This is alpha software and is under heavy development.
 Installation
 -----------------------
 
-- Make sure you have a JavaScript interpreter installed. In Ubuntu you can
-  install the Spidermonkey shell with this command:
+- Make sure you have a JavaScript interpreter installed.  On Linux jslint.vim
+  supports Spidermonkey, Rhino, and node.js.  Spidermonkey or node.js are
+  recommended because Rhino tends to have a long startup time.
+
+  In Ubuntu you can install the Spidermonkey shell with this command:
 
         $ sudo apt-get install spidermonkey-bin
 
   Latest Ubuntu versions don't have spidermonkey in the default repositories.
   You can use rhino instead:
 
-		$ sudo apt-get install rhino
+        $ sudo apt-get install rhino
+
+  Or you can find instructions for installing node.js on the [node.js website][nodejs].
+
+  [nodejs]: http://nodejs.org/
 
   On Windows you can use `cscript.exe` - which is probably already installed.
 
-  On MacOS X you don't need to install any JavaScript interpreter cause it
-  automatically uses it's JavaScriptCore engine.
+  On MacOS X you don't need to install any JavaScript interpreter because one
+  is included with OS X by default.
 
 - If you have rake installed, run:
 
@@ -48,11 +55,10 @@ Installation
   It also will display more information about the error in the commandline if the curser is
   in the same line.
 
-- You also can call it manually via ':JSLintUpdate'
-
+- You also can call it manually via `:JSLintUpdate`
 
 - (optional) Add any valid JSLint options to `~/.jslintrc` file, they will be
-  used as global options for all JavaScript file.
+  used as global options for all JavaScript files.
   For example:
 
         /*jslint browser: true, regexp: true */
@@ -98,7 +104,7 @@ Credits
 
 - Jesse Hallett -- original author
 - Nathan Smith -- Windows compatibility, quickfix integration, better OS X
-  compatibility, and many other improvements
+  compatibility, support for node.js, and other improvements
 - Travis Jeffery -- Easy plugin installation with rake
 - Sam Goldstein -- Display of problem report for the current line and bug fixes
 - Bryan Chow -- Fixes for formatting issues and typos

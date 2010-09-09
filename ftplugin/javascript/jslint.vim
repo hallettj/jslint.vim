@@ -52,14 +52,15 @@ if has("win32")
   let s:plugin_path = s:plugin_path . "vimfiles"
   let s:runjslint_ext = 'wsf'
 else
+  let s:runjslint_ext = 'js'
   if executable('/System/Library/Frameworks/JavaScriptCore.framework/Resources/jsc')
     let s:cmd = '/System/Library/Frameworks/JavaScriptCore.framework/Resources/jsc'
-    let s:runjslint_ext = 'js'
+  elseif executable('node')
+    let s:cmd = 'node'
   elseif executable('js')
     let s:cmd = 'js'
-    let s:runjslint_ext = 'js'
   else
-    echoerr('No JS interpreter found. Checked for jsc, js (spidermonkey)')
+    echoerr('No JS interpreter found. Checked for jsc, js (spidermonkey), and node')
   endif
 endif
 let s:plugin_path = s:install_dir . "/jslint/"

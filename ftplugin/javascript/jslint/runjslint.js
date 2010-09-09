@@ -1,6 +1,11 @@
-/*global JSLINT load readline print laxbreak:true */
+/*jslint laxbreak: true */
 
-load('fulljslint.js');
+if (typeof require != 'undefined') {
+    JSLINT = require('./jslint-core').JSLINT;
+    print = require('sys').puts;
+} else {
+    load('jslint-core.js');
+}
 
 // Import extra libraries if running in Rhino.
 if (typeof importPackage != 'undefined') {
@@ -9,9 +14,24 @@ if (typeof importPackage != 'undefined') {
 }
 
 var readSTDIN = (function() {
+    // readSTDIN() definition for nodejs
+    if (typeof process != 'undefined' && process.openStdin) {
+        return function readSTDIN(callback) {
+            var stdin = process.openStdin()
+              , body = [];
+
+            stdin.on('data', function(chunk) {
+                body.push(chunk);
+            });
+
+            stdin.on('end', function(chunk) {
+                callback(body.join('\n'));
+            });
+        };
+
     // readSTDIN() definition for Rhino
-    if (typeof BufferedReader != 'undefined') {
-        return function readSTDIN() {
+    } else if (typeof BufferedReader != 'undefined') {
+        return function readSTDIN(callback) {
             // setup the input buffer and output buffer
             var stdin = new BufferedReader(new InputStreamReader(System['in'])),
                 lines = [];
@@ -21,12 +41,12 @@ var readSTDIN = (function() {
                 lines.push(stdin.readLine());
             }
 
-            return lines.join('\n');
+            callback(lines.join('\n'));
         };
 
     // readSTDIN() definition for Spidermonkey
     } else if (typeof readline != 'undefined') {
-        return function readSTDIN() {
+        return function readSTDIN(callback) {
             var line
               , input = []
               , emptyCount = 0
@@ -44,23 +64,24 @@ var readSTDIN = (function() {
             }
 
             input.splice(-emptyCount);
-            return input.join("\n");
+            callback(input.join('\n'));
         };
     }
 })();
 
-var body = readSTDIN() || arguments[0],
-    ok = JSLINT(body),
-    i,
-    error,
-    errorCount;
+readSTDIN(function(body) {
+    var ok = JSLINT(body)
+      , i
+      , error
+      , errorCount;
 
-if (!ok) {
-    errorCount = JSLINT.errors.length;
-    for (i = 0; i < errorCount; i += 1) {
-        error = JSLINT.errors[i];
-        if (error && error.reason && error.reason.match(/^Stopping/) === null) {
-            print([error.line, error.character, error.reason].join(":"));
+    if (!ok) {
+        errorCount = JSLINT.errors.length;
+        for (i = 0; i < errorCount; i += 1) {
+            error = JSLINT.errors[i];
+            if (error && error.reason && error.reason.match(/^Stopping/) === null) {
+                print([error.line, error.character, error.reason].join(":"));
+            }
         }
     }
-}
+});

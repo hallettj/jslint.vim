@@ -1,5 +1,5 @@
 // jslint.js
-// 2010-07-14
+// 2010-08-08
 
 /*
 Copyright (c) 2002 Douglas Crockford  (www.JSLint.com)
@@ -2333,7 +2333,7 @@ loop:   for (;;) {
     function isPoorRelation(node) {
         return node &&
               ((node.type === '(number)' && +node.value === 0) ||
-               (node.type === '(string)' && node.value === ' ') ||
+               (node.type === '(string)' && node.value === '') ||
                 node.type === 'true' ||
                 node.type === 'false' ||
                 node.type === 'undefined' ||
@@ -4545,17 +4545,23 @@ loop:   for (;;) {
 
 
     function property_name() {
-        var i = optionalidentifier(true);
-        if (!i) {
+        var id = optionalidentifier(true);
+        if (!id) {
             if (nexttoken.id === '(string)') {
-                i = nexttoken.value;
+                id = nexttoken.value;
+                if (option.adsafe &&
+                        (id.charAt(0) === '_' ||
+                         id.charAt(id.length - 1) === '_')) {
+                    warning("Unexpected {a} in '{b}'.", token,
+                        "dangling '_'", id);
+                }
                 advance();
             } else if (nexttoken.id === '(number)') {
-                i = nexttoken.value.toString();
+                id = nexttoken.value.toString();
                 advance();
             }
         }
-        return i;
+        return id;
     }
 
 
@@ -5276,27 +5282,30 @@ loop:   for (;;) {
                 o.safe = true;
             }
             if (o.safe) {
-                o.browser = false;
-                o.css     = false;
-                o.debug   = false;
-                o.devel   = false;
-                o.eqeqeq  = true;
-                o.evil    = false;
-                o.forin   = false;
-                o.nomen   = true;
-                o.on      = false;
-                o.rhino   = false;
-                o.safe    = true;
-                o.windows = false;
-                o.strict  = true;
-                o.sub     = false;
-                o.undef   = true;
+                o.browser =
+                o.css     =
+                o.debug   =
+                o.devel   =
+                o.evil    =
+                o.forin   =
+                o.on      =
+                o.rhino   =
+                o.windows =
+                o.sub     =
                 o.widget  = false;
-                predefined.Date = null;
-                predefined['eval'] = null;
-                predefined.Function = null;
+
+                o.eqeqeq  =
+                o.nomen   =
+                o.safe    =
+                o.strict  =
+                o.undef   = true;
+
+                predefined.Date =
+                predefined['eval'] =
+                predefined.Function =
                 predefined.Object = null;
-                predefined.ADSAFE = false;
+
+                predefined.ADSAFE =
                 predefined.lib = false;
             }
             option = o;
@@ -5636,8 +5645,162 @@ loop:   for (;;) {
     };
     itself.jslint = itself;
 
-    itself.edition = '2010-07-14';
+    itself.edition = '2010-08-08';
 
     return itself;
 
 }());
+
+if (typeof exports == 'undefined') {
+    exports = {};
+}
+
+exports.JSLINT = JSLINT;
+exports.options = [
+	{
+		"name": "adsafe",
+		"value": true,
+		"description": "if ADsafe should be enforced"
+	},
+	{
+		"name": "bitwise",
+		"value": true,
+		"description": "if bitwise operators should not be allowed"
+	},
+	{
+		"name": "browser",
+		"value": true,
+		"description": "if the standard browser globals should be predefined"
+	},
+	{
+		"name": "cap",
+		"value": true,
+		"description": "if upper case HTML should be allowed"
+	},
+	{
+		"name": "css",
+		"value": true,
+		"description": "if CSS workarounds should be tolerated"
+	},
+	{
+		"name": "debug",
+		"value": true,
+		"description": "if debugger statements should be allowed"
+	},
+	{
+		"name": "devel",
+		"value": true,
+		"description": "if logging should be allowed (console, alert, etc.)"
+	},
+	{
+		"name": "eqeqeq",
+		"value": true,
+		"description": "if === should be required"
+	},
+	{
+		"name": "es5",
+		"value": true,
+		"description": "if ES5 syntax should be allowed"
+	},
+	{
+		"name": "evil",
+		"value": true,
+		"description": "if eval should be allowed"
+	},
+	{
+		"name": "forin",
+		"value": true,
+		"description": "if for in statements must filter"
+	},
+	{
+		"name": "fragment",
+		"value": true,
+		"description": "if HTML fragments should be allowed"
+	},
+	{
+		"name": "immed",
+		"value": true,
+		"description": "if immediate invocations must be wrapped in parens"
+	},
+	{
+		"name": "laxbreak",
+		"value": true,
+		"description": "if line breaks should not be checked"
+	},
+	{
+		"name": "newcap",
+		"value": true,
+		"description": "if constructor names must be capitalized"
+	},
+	{
+		"name": "nomen",
+		"value": true,
+		"description": "if names should be checked"
+	},
+	{
+		"name": "on",
+		"value": true,
+		"description": "if HTML event handlers should be allowed"
+	},
+	{
+		"name": "onevar",
+		"value": true,
+		"description": "if only one var statement per function should be allowed"
+	},
+	{
+		"name": "passfail",
+		"value": true,
+		"description": "if the scan should stop on first error"
+	},
+	{
+		"name": "plusplus",
+		"value": true,
+		"description": "if increment/decrement should not be allowed"
+	},
+	{
+		"name": "regexp",
+		"value": true,
+		"description": "if the . should not be allowed in regexp literals"
+	},
+	{
+		"name": "rhino",
+		"value": true,
+		"description": "if the Rhino environment globals should be predefined"
+	},
+	{
+		"name": "undef",
+		"value": true,
+		"description": "if variables should be declared before used"
+	},
+	{
+		"name": "safe",
+		"value": true,
+		"description": "if use of some browser features should be restricted"
+	},
+	{
+		"name": "windows",
+		"value": true,
+		"description": "if MS Windows-specigic globals should be predefined"
+	},
+	{
+		"name": "strict",
+		"value": true,
+		"description": "require the \"use strict\"; pragma"
+	},
+	{
+		"name": "sub",
+		"value": true,
+		"description": "if all forms of subscript notation are tolerated"
+	},
+	{
+		"name": "white",
+		"value": true,
+		"description": "if strict whitespace rules apply"
+	},
+	{
+		"name": "widget",
+		"value": true,
+		"description": "if the Yahoo Widgets globals should be predefined"
+	}
+];
+exports.version = '2010-08-08';
