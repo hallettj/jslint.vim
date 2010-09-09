@@ -18,8 +18,6 @@ let s:install_dir = expand("<sfile>:p:h")
 au BufLeave <buffer> call s:JSLintClear()
 
 au BufEnter <buffer> call s:JSLint()
-au InsertLeave <buffer> call s:JSLint()
-au InsertEnter <buffer> call s:JSLint()
 au BufWritePost <buffer> call s:JSLint()
 
 au CursorHold <buffer> call s:JSLint()
