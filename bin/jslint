@@ -17,7 +17,7 @@ else
   plugin_path = File.join(ENV['HOME'], '.vim')
 end
 
-Dir.chdir(File.join(plugin_path, 'plugin', 'jslint')) do |dir|
+Dir.chdir(File.join(plugin_path, 'ftplugin', 'javascript', 'jslint')) do |dir|
   IO.popen("#{js_cmd} runjslint.#{runjslint_ext}", 'r+') do |jslint|
     jslint.write(File.open(target, 'r') { |f| f.read })
     jslint.close_write
