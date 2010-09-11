@@ -140,7 +140,7 @@ function! s:JSLint()
       let s:matchDict['message'] = b:parts[3]
       let b:matchedlines[l:line] = s:matchDict
       if g:JSLintHighlightErrorLine == 1
-          let s:mID = matchadd('JSLintError', '\%' . l:line . 'l\n\@!')
+          let s:mID = matchadd('JSLintError', '\%' . l:line . 'l\S.*\(\S\|$\)')
       endif
       " Add line to match list
       call add(b:matched, s:matchDict)
