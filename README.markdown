@@ -115,6 +115,9 @@ Credits
 - Nik Graf -- Documentation updates
 - Ian McCracken -- Real-time error checking
 - Luke Smith -- Enhancement of OS X support
+- Michael Smith -- Feature to customize JavaScript executable that is used by
+  setting JS_CMD environment variable
+- Szilágyi Szilveszter -- Fixes for bugs when running in Windows
 
 License
 ---------
