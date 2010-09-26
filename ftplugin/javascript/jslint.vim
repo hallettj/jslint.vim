@@ -13,7 +13,11 @@ else
     let b:did_jslint_plugin = 1
 endif
 
-let s:install_dir = expand("<sfile>:p:h")
+if has("win32")
+	let s:install_dir = '"' . expand("~/vimfiles/ftplugin/javascript") . '"'
+else
+	let s:install_dir = expand("<sfile>:p:h")
+endif
 
 au BufLeave <buffer> call s:JSLintClear()
 
@@ -22,10 +26,14 @@ au InsertLeave <buffer> call s:JSLint()
 "au InsertEnter <buffer> call s:JSLint()
 au BufWritePost <buffer> call s:JSLint()
 
-au CursorHold <buffer> call s:JSLint()
-au CursorHoldI <buffer> call s:JSLint()
+" due to http://tech.groups.yahoo.com/group/vimdev/message/52115
+if(!has("win32") || v:version>702)
+	au CursorHold <buffer> call s:JSLint()
+	au CursorHoldI <buffer> call s:JSLint()
 
-au CursorHold <buffer> call s:GetJSLintMessage()
+	au CursorHold <buffer> call s:GetJSLintMessage()
+endif
+
 au CursorMoved <buffer> call s:GetJSLintMessage()
 
 if !exists("g:JSLintHighlightErrorLine")
@@ -51,7 +59,6 @@ noremap <buffer><silent> <C-R> <C-R>:JSLintUpdate<CR>
 " Set up command and parameters
 if has("win32")
   let s:cmd = 'cscript /NoLogo '
-  let s:plugin_path = s:plugin_path . "vimfiles"
   let s:runjslint_ext = 'wsf'
 else
   let s:runjslint_ext = 'js'
