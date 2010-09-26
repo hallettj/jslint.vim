@@ -119,10 +119,11 @@ Credits
   setting JS_CMD environment variable
 - Szilágyi Szilveszter -- Fixes for bugs when running in Windows
 
+
 License
 ---------
 
-Copyright (c) 2008-2009 Jesse Hallett <hallettj@gmail.com>, except where
+Copyright (c) 2008-2010 Jesse Hallett <hallettj@gmail.com>, except where
 otherwise noted
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
