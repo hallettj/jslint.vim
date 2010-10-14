@@ -15,6 +15,9 @@ endif
 
 if has("win32")
   let s:install_dir = '"' . expand("~/vimfiles/ftplugin/javascript") . '"'
+  if !isdirectory(s:install_dir)
+    let s:install_dir = '"' . expand("<sfile>:p:h") . '"'
+  endif
 else
   let s:install_dir = expand("<sfile>:p:h")
 endif
