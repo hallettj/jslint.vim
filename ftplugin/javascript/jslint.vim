@@ -53,6 +53,9 @@ endif
 if !exists(":JSLintUpdate")
   command JSLintUpdate :call s:JSLintUpdate()
 endif
+if !exists(":JSLintToggle")
+  command JSLintToggle :let b:jslint_disabled = exists('b:jslint_disabled') ? b:jslint_disabled ? 0 : 1 : 1
+endif
 
 noremap <buffer><silent> dd dd:JSLintUpdate<CR>
 noremap <buffer><silent> dw dw:JSLintUpdate<CR>
@@ -115,6 +118,10 @@ function! s:JSLintClear()
 endfunction
 
 function! s:JSLint()
+  if exists("b:jslint_disabled") && b:jslint_disabled == 1
+    return
+  endif
+
   highlight link JSLintError SpellBad
 
   if exists("b:cleared")
@@ -140,6 +147,7 @@ function! s:JSLint()
   let b:jslint_output = system(s:cmd, join(s:jslintrc + getline(b:firstline, b:lastline), "\n") . "\n")
   if v:shell_error
    echoerr 'could not invoke JSLint!'
+   let b:jslint_disabled = 1
   end
 
   for error in split(b:jslint_output, "\n")
