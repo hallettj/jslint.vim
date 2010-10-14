@@ -144,10 +144,14 @@ function! s:JSLint()
   endif
 
 
-  let b:jslint_output = system(s:cmd, join(s:jslintrc + getline(b:firstline, b:lastline), "\n") . "\n")
+  let lines = join(s:jslintrc + getline(b:firstline, b:lastline), "\n")
+  if len(lines) == 0
+    return
+  endif
+  let b:jslint_output = system(s:cmd, lines . "\n")
   if v:shell_error
-   echoerr 'could not invoke JSLint!'
-   let b:jslint_disabled = 1
+    echoerr 'could not invoke JSLint!'
+    let b:jslint_disabled = 1
   end
 
   for error in split(b:jslint_output, "\n")
