@@ -164,7 +164,7 @@ function! s:JSLint()
       let l:qf_item.filename = expand('%')
       let l:qf_item.lnum = l:line
       let l:qf_item.text = b:parts[3]
-      let l:qf_item.type = 'E'
+      let l:qf_item.type = 'W'
 
       " Add line to quickfix list
       call add(b:qf_list, l:qf_item)
