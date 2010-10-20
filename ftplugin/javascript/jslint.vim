@@ -128,11 +128,13 @@ function! s:JSLint()
   if a:firstline == a:lastline
     let b:firstline = 1
     let b:lastline = '$'
-  else 
+  else
     let b:firstline = a:firstline
     let b:lastline = a:lastline
   endif
 
+  let b:qf_list = []
+  let b:qf_window_count = -1
 
   let b:jslint_output = system(s:cmd, join(s:jslintrc + getline(b:firstline, b:lastline), "\n") . "\n")
   if v:shell_error
@@ -155,8 +157,29 @@ function! s:JSLint()
       endif
       " Add line to match list
       call add(b:matched, s:matchDict)
+
+      " Store the error for the quickfix window
+      let l:qf_item = {}
+      let l:qf_item.bufnr = bufnr('%')
+      let l:qf_item.filename = expand('%')
+      let l:qf_item.lnum = l:line
+      let l:qf_item.text = b:parts[3]
+      let l:qf_item.type = 'E'
+
+      " Add line to quickfix list
+      call add(b:qf_list, l:qf_item)
     endif
   endfor
+
+  if exists("s:jslint_qf")
+    " if jslint quickfix window is already created, reuse it
+    call s:ActivateJSLintQuickFixWindow()
+    call setqflist(b:qf_list, 'r')
+  else
+    " one jslint quickfix window for all buffers
+    call setqflist(b:qf_list, '')
+    let s:jslint_qf = s:GetQuickFixStackCount()
+  endif
   let b:cleared = 0
 endfunction
 
@@ -181,6 +204,42 @@ if !exists("*s:GetJSLintMessage")
         if b:showing_message == 1
             echo
             let b:showing_message = 0
+        endif
+    endfunction
+endif
+
+if !exists("*s:GetQuickFixStackCount")
+    function s:GetQuickFixStackCount()
+        let l:stack_count = 0
+        try
+            silent colder 9
+        catch /E380:/
+        endtry
+
+        try
+            for i in range(9)
+                silent cnewer
+                let l:stack_count = l:stack_count + 1
+            endfor
+        catch /E381:/
+            return l:stack_count
+        endtry
+    endfunction
+endif
+
+if !exists("*s:ActivateJSLintQuickFixWindow")
+    function s:ActivateJSLintQuickFixWindow()
+        try
+            silent colder 9 " go to the bottom of quickfix stack
+        catch /E380:/
+        endtry
+
+        if s:jslint_qf > 0
+            try
+                exe "silent cnewer " . s:jslint_qf
+            catch /E381:/
+                echoerr "Could not activate JSLint Quickfix Window."
+            endtry
         endif
     endfunction
 endif
