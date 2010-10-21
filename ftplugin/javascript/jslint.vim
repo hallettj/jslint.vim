@@ -143,15 +143,21 @@ function! s:JSLint()
 
   for error in split(b:jslint_output, "\n")
     " Match {line}:{char}:{message}
-    let b:parts = matchlist(error, "\\(\\d\\+\\):\\(\\d\\+\\):\\(.*\\)")
+    let b:parts = matchlist(error, "\\(\\d\\+\\):\\(\\d\\+\\):\\([A-Z]\\+\\):\\(.*\\)")
     if !empty(b:parts)
       let l:line = b:parts[1] + (b:firstline - 1 - len(s:jslintrc)) " Get line relative to selection
+      let l:errorMessage = b:parts[4]
 
-        " Store the error for an error under the cursor
+      " Store the error for an error under the cursor
       let s:matchDict = {}
       let s:matchDict['lineNum'] = l:line
-      let s:matchDict['message'] = b:parts[3]
+      let s:matchDict['message'] = l:errorMessage
       let b:matchedlines[l:line] = s:matchDict
+      if b:parts[3] == 'ERROR'
+          let l:errorType = 'E'
+      else
+          let l:errorType = 'W'
+      endif
       if g:JSLintHighlightErrorLine == 1
           let s:mID = matchadd('JSLintError', '\%' . l:line . 'l\S.*\(\S\|$\)')
       endif
@@ -163,8 +169,8 @@ function! s:JSLint()
       let l:qf_item.bufnr = bufnr('%')
       let l:qf_item.filename = expand('%')
       let l:qf_item.lnum = l:line
-      let l:qf_item.text = b:parts[3]
-      let l:qf_item.type = 'W'
+      let l:qf_item.text = l:errorMessage
+      let l:qf_item.type = l:errorType
 
       " Add line to quickfix list
       call add(b:qf_list, l:qf_item)
