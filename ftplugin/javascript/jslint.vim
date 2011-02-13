@@ -136,7 +136,12 @@ function! s:JSLint()
 
   " Detect range
   if a:firstline == a:lastline
-    let b:firstline = 1
+    " Skip a possible shebang line, e.g. for node.js script.
+    if getline(1)[0:1] == "#!"
+      let b:firstline = 2
+    else
+      let b:firstline = 1
+    endif
     let b:lastline = '$'
   else
     let b:firstline = a:firstline
