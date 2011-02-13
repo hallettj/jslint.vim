@@ -46,6 +46,10 @@ Installation
   Otherwise copy the directory ftplugin/ into your Vim ftplugin directory.
   Usually this is `~/.vim/ftplugin/`. On Windows it is `~/vimfiles/ftplugin/`.
 
+- Finally, activate filetype plugins in your .vimrc, by adding the following line:
+
+		filetype plugin on
+
  Usage
  -----------------------
 
