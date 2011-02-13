@@ -48,7 +48,7 @@ Installation
 
 - Finally, activate filetype plugins in your .vimrc, by adding the following line:
 
-		filetype plugin on
+        filetype plugin on
 
  Usage
  -----------------------
