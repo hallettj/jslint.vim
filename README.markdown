@@ -50,8 +50,9 @@ Installation
 
         filetype plugin on
 
- Usage
- -----------------------
+
+Usage
+-----------------------
 
 - This plugin automatically checks the JavaScript source and highlights the
   lines with errors.
@@ -60,6 +61,10 @@ Installation
   in the same line.
 
 - You also can call it manually via `:JSLintUpdate`
+
+- You can toggle automatic checking on or off with the command `:JSLintToggle`.
+  You can modify your `~/.vimrc` file to bind this command to a key or to turn
+  off error checking by default.
 
 - (optional) Add any valid JSLint options to `~/.jslintrc` file, they will be
   used as global options for all JavaScript files.
@@ -81,6 +86,22 @@ requires that the Vim plugin is installed and also requires Ruby.
 To disable error highlighting altogether add this line to your `~/.vimrc` file:
 
     let g:JSLintHighlightErrorLine = 0
+
+
+Working with quickfix
+------------------------
+
+When automatic error checking is enabled jslint.vim will automatically display
+errors in the [quickfix][] window in addition to highlighting them.
+
+You can open and close the quickfix window with the commands `:copen` and
+`:cclose`.  Use the command `:cn` to go to the next error or `:cc [nr]` to go
+to a specific error, where `[nr]` is a number.  The first error in the list is
+`1`, the second is `2`, and so on.
+
+Once an error is fixed the corresponding quickfix line will disappear.
+
+[quickfix]: http://vimdoc.sourceforge.net/htmldoc/quickfix.html  "Vim documentation: quickfix"
 
 
 Alternative Plugins
@@ -113,7 +134,8 @@ Credits
 - Sam Goldstein -- Display of problem report for the current line and bug fixes
 - Bryan Chow -- Fixes for formatting issues and typos
 - Jeff Buttars -- Options to remove and to disable error highlighting
-- Rainux Luo -- Support for reading JSLint options from a `~/.jslintrc` file
+- Rainux Luo -- Support for reading JSLint options from a `~/.jslintrc` file,
+  Pathogen compatibility on Windows
 - Pascal Hartig -- Support for running jslint with rhino and other updates
 - Martin Schürrer -- Fixing path issues and error handling
 - Nik Graf -- Documentation updates
@@ -122,6 +144,10 @@ Credits
 - Michael Smith -- Feature to customize JavaScript executable that is used by
   setting JS_CMD environment variable
 - Szilágyi Szilveszter -- Fixes for bugs when running in Windows
+- Yasuhiro Matsumoto -- Pathogen compatibility and `:JSLintToggle` command
+- Ben Loveridge -- Integrated quickfix with automatic error checking
+- Brian Egan -- Documentation for enabling filetype plugins
+- Trent Mick -- Feature to ignore #! lines for compatibility with shell scripts
 
 
 License
