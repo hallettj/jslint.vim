@@ -151,7 +151,10 @@ function! s:JSLint()
   if len(lines) == 0
     return
   endif
+  let old_shell = &shell
+  let &shell = '/bin/bash'
   let b:jslint_output = system(s:cmd, lines . "\n")
+  let &shell = old_shell
   if v:shell_error
     echoerr 'could not invoke JSLint!'
     let b:jslint_disabled = 1
