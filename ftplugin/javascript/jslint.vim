@@ -47,7 +47,8 @@ if !exists(":JSLintUpdate")
   command JSLintUpdate :call s:JSLintUpdate()
 endif
 if !exists(":JSLintToggle")
-  command JSLintToggle :let b:jslint_disabled = exists('b:jslint_disabled') ? b:jslint_disabled ? 0 : 1 : 1
+  command JSLintToggle exec ":let b:jslint_disabled = exists('b:jslint_disabled') ? b:jslint_disabled ? 0 : 1 : 1" |
+    \                  echo 'JSLint ' . ['enabled', 'disabled'][b:jslint_disabled] . '.'
 endif
 
 noremap <buffer><silent> dd dd:JSLintUpdate<CR>
