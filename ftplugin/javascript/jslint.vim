@@ -145,6 +145,9 @@ if !exists('s:update')
   function s:CompleteUpdateProfiles(...)
     return join(keys(s:update.profiles), "\n")
   endfunction
+endif
+
+if exists(':JSLintUpdateMode') != 2
   command -buffer -complete=custom,s:CompleteUpdateProfiles -nargs=?
         \ JSLintUpdateMode
         \ exec <q-args> == ''
