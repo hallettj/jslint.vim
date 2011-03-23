@@ -135,6 +135,8 @@ if !exists('s:update')
       au BufWrite <buffer> call s:JSLint()
 
       au CursorMoved <buffer> call s:GetJSLintMessage()
+
+      call s:JSLint()
     endfunction
 
 
@@ -149,8 +151,6 @@ if !exists('s:update')
         \   ? 'echo s:update.GetProfile()[0]'
         \   : 'call s:update.SelectProfile(<f-args>)'
 endif
-
-exec 'JSLintUpdateMode' g:JSLintUpdateProfile
 
 
 if !exists("*s:JSLintUpdate")
@@ -378,3 +378,5 @@ if !exists("*s:ActivateJSLintQuickFixWindow")
     endfunction
 endif
 
+
+exec 'JSLintUpdateMode' g:JSLintUpdateProfile
