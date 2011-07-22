@@ -36,15 +36,23 @@ if !exists("g:JSLintHighlightErrorLine")
   let g:JSLintHighlightErrorLine = 1
 endif
 
+if !exists("g:JSLintQuickFixWindow")
+  let g:JSLintQuickFixWindow = 0
+endif
+
 if !exists("*s:JSLintUpdate")
-  function s:JSLintUpdate()
-    silent call s:JSLint()
+  function s:JSLintUpdate(...)
+    let l:quickfix = a:0 > 0 && a:1 == 1
+    silent call s:JSLint(l:quickfix)
     call s:GetJSLintMessage()
   endfunction
 endif
 
 if !exists(":JSLintUpdate")
   command JSLintUpdate :call s:JSLintUpdate()
+endif
+if !exists(":JSLintQuickFix")
+  command JSLintQuickFix :call s:JSLintUpdate(1)
 endif
 if !exists(":JSLintToggle")
   command JSLintToggle :let b:jslint_disabled = exists('b:jslint_disabled') ? b:jslint_disabled ? 0 : 1 : 1
@@ -113,7 +121,7 @@ function! s:JSLintClear()
   let b:cleared = 1
 endfunction
 
-function! s:JSLint()
+function! s:JSLint(...)
   if exists("b:jslint_disabled") && b:jslint_disabled == 1
     return
   endif
@@ -157,6 +165,8 @@ function! s:JSLint()
     let b:jslint_disabled = 1
   end
 
+  let l:showQuickfix = g:JSLintQuickFixWindow == 1 || (a:0 > 0 && a:1 == 1)
+
   for error in split(b:jslint_output, "\n")
     " Match {line}:{char}:{message}
     let b:parts = matchlist(error, '\v(\d+):(\d+):([A-Z]+):(.*)')
@@ -181,26 +191,30 @@ function! s:JSLint()
       call add(b:matched, s:matchDict)
 
       " Store the error for the quickfix window
-      let l:qf_item = {}
-      let l:qf_item.bufnr = bufnr('%')
-      let l:qf_item.filename = expand('%')
-      let l:qf_item.lnum = l:line
-      let l:qf_item.text = l:errorMessage
-      let l:qf_item.type = l:errorType
+      if l:showQuickfix
+        let l:qf_item = {}
+        let l:qf_item.bufnr = bufnr('%')
+        let l:qf_item.filename = expand('%')
+        let l:qf_item.lnum = l:line
+        let l:qf_item.text = l:errorMessage
+        let l:qf_item.type = l:errorType
 
-      " Add line to quickfix list
-      call add(b:qf_list, l:qf_item)
+        " Add line to quickfix list
+        call add(b:qf_list, l:qf_item)
+      endif
     endif
   endfor
 
-  if exists("s:jslint_qf")
-    " if jslint quickfix window is already created, reuse it
-    call s:ActivateJSLintQuickFixWindow()
-    call setqflist(b:qf_list, 'r')
-  else
-    " one jslint quickfix window for all buffers
-    call setqflist(b:qf_list, '')
-    let s:jslint_qf = s:GetQuickFixStackCount()
+  if l:showQuickfix
+    if exists("s:jslint_qf")
+      " if jslint quickfix window is already created, reuse it
+      call s:ActivateJSLintQuickFixWindow()
+      call setqflist(b:qf_list, 'r')
+    else
+      " one jslint quickfix window for all buffers
+      call setqflist(b:qf_list, '')
+      let s:jslint_qf = s:GetQuickFixStackCount()
+    endif
   endif
   let b:cleared = 0
 endfunction
