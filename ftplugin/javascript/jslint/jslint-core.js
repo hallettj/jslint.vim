@@ -5652,7 +5652,7 @@ loop:   for (;;) {
 }());
 
 if (typeof exports == 'undefined') {
-    exports = {};
+    var exports = {};
 }
 
 exports.JSLINT = JSLINT;
