@@ -43,7 +43,10 @@ endif
 if !exists("*s:JSLintUpdate")
   function s:JSLintUpdate(...)
     let l:quickfix = a:0 > 0 && a:1 == 1
-    silent call s:JSLint(l:quickfix)
+    if l:quickfix == 1
+      let g:JSLintQuickFixWindow = 1
+    endif
+    silent call s:JSLint()
     call s:GetJSLintMessage()
   endfunction
 endif
@@ -165,7 +168,7 @@ function! s:JSLint(...)
     let b:jslint_disabled = 1
   end
 
-  let l:showQuickfix = g:JSLintQuickFixWindow == 1 || (a:0 > 0 && a:1 == 1)
+  let l:showQuickfix = g:JSLintQuickFixWindow == 1
 
   for error in split(b:jslint_output, "\n")
     " Match {line}:{char}:{message}
