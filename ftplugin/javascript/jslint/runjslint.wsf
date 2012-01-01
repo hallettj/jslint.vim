@@ -24,14 +24,23 @@ var body = readSTDIN() || arguments[0],
     ok = JSLINT(body),
     i,
     error,
-    errorCount;
+    errorCount, 
+    nextError, 
+    errorCount,
+    WARN = 'WARNING', 
+    ERROR = 'ERROR';
 
 if (!ok) {
     errorCount = JSLINT.errors.length;
+    errorType = WARN;
+    nextError = i < errorCount ? JSLINT.errors[i+1] : null;
     for (i = 0; i < errorCount; i += 1) {
         error = JSLINT.errors[i];
         if (error && error.reason && error.reason.match(/^Stopping/) === null) {
-            WScript.echo([error.line, error.character, error.reason].join(":"));
+            if (nextError && nextError.reason && nextError.reason.match(/^Stopping/) !== null) {
+                errorType = ERROR;
+            }
+            WScript.echo([error.line, error.character, errorType, error.reason].join(":"));
         }
     }
 }
