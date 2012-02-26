@@ -2,6 +2,20 @@
 
 target = File.expand_path(ARGV.first)
 
+# Cross-platform way of finding an executable in the $PATH.
+#
+#   which('ruby') #=> /usr/bin/ruby
+def which(cmd)
+  exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+  ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+    exts.each { |ext|
+      exe = "#{path}/#{cmd}#{ext}"
+      return exe if File.executable? exe
+    }
+  end
+  return nil
+end
+
 if RUBY_PLATFORM =~ /win32/i
   js_cmd = 'cscript'
   runjslint_ext = 'wsf'
@@ -10,11 +24,23 @@ else
   if ENV['JS_CMD']
     js_cmd = ENV['JS_CMD']
   else
-    js_cmd = 'js'
+    js_cmd = ['node', 'nodejs', 'js'].find { |ex| which ex }
   end
+
+  if !js_cmd and File.exist?('/System/Library/Frameworks/JavaScriptCore.framework/Resources/jsc')
+    js_cmd = '/System/Library/Frameworks/JavaScriptCore.framework/Resources/jsc'
+  end
+
   runjslint_ext = 'js'
+
   plugin_path = File.join(ENV['HOME'], '.vim')
-  # check for pathogen
+end
+
+# check for pathogen
+pathogen_path = File.join(plugin_path, 'bundle', 'jslint.vim')
+if File.exist? pathogen_path
+  plugin_path = pathogen_path
+else
   pathogen_path = File.join(plugin_path, 'bundle', 'jslint')
   plugin_path = pathogen_path if File.exist?(pathogen_path)
 end
