@@ -88,6 +88,18 @@ else
   let s:jslintrc = []
 end
 
+" load .jslintrc file from the current (pwd) directory if exists
+let s:localrc_file = fnamemodify(".", ":p") . '/.jslintrc'
+if filereadable(s:localrc_file)
+    let s:localrc = readfile(s:localrc_file)
+    let s:jslintrc = s:jslintrc + s:localrc
+endif
+" load .jslintrc file from the directory where the file is if exists
+let s:file_dir_file = expand('%:p:h') . '/.jslintrc'
+if filereadable(s:file_dir_file)
+    let s:filedir_rc = readfile(s:file_dir_file)
+    let s:jslintrc = s:jslintrc + s:filedir_rc
+endif
 
 " WideMsg() prints [long] message up to (&columns-1) length
 " guaranteed without "Press Enter" prompt.
