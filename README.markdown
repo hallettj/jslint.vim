@@ -149,6 +149,7 @@ Credits
 - Brian Egan -- Documentation for enabling filetype plugins
 - Trent Mick -- Feature to ignore #! lines for compatibility with shell scripts
 - Christopher Sexton -- Fixed errors in MacVim on Lion and Snow Leopard
+- Brian Donovan -- Fix for non-POSIX shells
 
 
 License
