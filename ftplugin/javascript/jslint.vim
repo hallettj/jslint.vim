@@ -77,7 +77,7 @@ let s:plugin_path = s:install_dir . "/jslint/"
 if has('win32')
   let s:plugin_path = substitute(s:plugin_path, '/', '\', 'g')
 endif
-let s:cmd = "cd " . s:plugin_path . " && " . s:cmd . " " . s:plugin_path . "runjslint." . s:runjslint_ext
+let s:cmd = 'cd "' . s:plugin_path . '" && ' . s:cmd . ' "' . s:plugin_path . 'runjslint.' . s:runjslint_ext . '"'
 
 let s:jslintrc_file = expand('~/.jslintrc')
 if filereadable(s:jslintrc_file)
