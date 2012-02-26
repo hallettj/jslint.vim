@@ -1,8 +1,14 @@
 /*jslint laxbreak: true */
 
-if (typeof require != 'undefined') {
-    JSLINT = require('./jslint-core').JSLINT;
-    print = require('sys').puts;
+var fs, vm, sandbox, jslintCore = 'jslint-core.js';
+
+if (typeof require !== 'undefined') {
+    print = require('util').puts;
+    fs = require('fs');
+    vm = require('vm');
+    sandbox = {};
+    res = vm.runInNewContext(fs.readFileSync(jslintCore), sandbox, jslintCore);
+    JSLINT = sandbox.JSLINT;
 } else {
     load('jslint-core.js');
 }
