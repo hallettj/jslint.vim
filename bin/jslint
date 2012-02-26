@@ -14,6 +14,9 @@ else
   end
   runjslint_ext = 'js'
   plugin_path = File.join(ENV['HOME'], '.vim')
+  # check for pathogen
+  pathogen_path = File.join(plugin_path, 'bundle', 'jslint')
+  plugin_path = pathogen_path if File.exist?(pathogen_path)
 end
 
 Dir.chdir(File.join(plugin_path, 'ftplugin', 'javascript', 'jslint')) do |dir|
