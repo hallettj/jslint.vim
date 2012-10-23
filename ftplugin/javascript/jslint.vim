@@ -291,6 +291,7 @@ if !exists("*s:ActivateJSLintQuickFixWindow")
         try
             silent colder 9 " go to the bottom of quickfix stack
         catch /E380:/
+        catch /E788:/
         endtry
 
         if s:jslint_qf > 0
