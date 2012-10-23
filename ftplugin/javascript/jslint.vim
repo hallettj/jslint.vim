@@ -87,7 +87,7 @@ if has('win32')
   let s:plugin_path = substitute(s:plugin_path, '/', '\', 'g')
 endif
 if has('win32')
-  let s:cmd = '"cd /d "' . s:plugin_path . '" && ' . s:cmd . ' "' . s:plugin_path . 'runjslint.' . s:runjslint_ext . '""'
+  let s:cmd = 'cmd.exe /C "cd /d "' . s:plugin_path . '" && ' . s:cmd . ' "' . s:plugin_path . 'runjslint.' . s:runjslint_ext . '""'
 else
   let s:cmd = 'cd "' . s:plugin_path . '" && ' . s:cmd . ' "' . s:plugin_path . 'runjslint.' . s:runjslint_ext . '"'
 endif
