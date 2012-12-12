@@ -1,4 +1,3 @@
-
 " Global Options
 "
 " Enable/Disable highlighting of errors in source.
@@ -247,6 +246,7 @@ let b:showing_message = 0
 
 if !exists("*s:GetJSLintMessage")
   function s:GetJSLintMessage()
+    let b:showing_message = 0 " for Error:E121: Undefined variable: b:showing_message
     let s:cursorPos = getpos(".")
 
     " Bail if RunJSLint hasn't been called yet
