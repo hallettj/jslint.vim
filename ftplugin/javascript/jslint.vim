@@ -143,6 +143,9 @@ function! s:JSLint()
   if exists("b:jslint_disabled") && b:jslint_disabled == 1
     return
   endif
+  if !(&filetype == "javascript")
+    return
+  endif
 
   highlight link JSLintError SpellBad
 
