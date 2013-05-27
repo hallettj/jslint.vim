@@ -1,3 +1,12 @@
+This project is no longer under active development.  For alternatives
+take a look at the [Alternative Plugins][] section below.  Or check out
+the more actively developed forks of this project:
+[wookiehangover/jshint.vim][] and [FuDesign2008/jslint.vim][].
+
+[Alternative Plugins]: #alternative-plugins
+[wookiehangover/jshint.vim]: https://github.com/wookiehangover/jshint.vim
+[FuDesign2008/jslint.vim]: https://github.com/FuDesign2008/jslint.vim
+
 jslint.vim
 =============
 
@@ -107,6 +116,11 @@ Once an error is fixed the corresponding quickfix line will disappear.
 Alternative Plugins
 ---------------------
 
+[Syntastic][] supports syntax checking for a number of languages,
+including JavaScript via jshint or JSLint.
+
+[Syntastic]: https://github.com/scrooloose/syntastic
+
 There are other plugins for Vim that integrate [JavaScript Lint][].  JavaScript
 Lint is another JavaScript checker that is similar to JSLint.
 
@@ -150,6 +164,10 @@ Credits
 - Trent Mick -- Feature to ignore #! lines for compatibility with shell scripts
 - Christopher Sexton -- Fixed errors in MacVim on Lion and Snow Leopard
 - Brian Donovan -- Fix for non-POSIX shells
+- guileen (Lin Gui) -- Prefer node over jsc on Mac OS
+- daethorian (Lowe Thiderman) -- Fix for error in updated spidermonkey
+  version
+- afairley -- Check for `nodejs` executable if `node` is not present
 
 
 License
