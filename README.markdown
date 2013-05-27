@@ -1,6 +1,6 @@
 This project is no longer under active development.  For alternatives
 take a look at the [Alternative Plugins][] section below.  Or check out
-the more actively developed forks of this project:
+the actively developed forks of this project:
 [wookiehangover/jshint.vim][] and [FuDesign2008/jslint.vim][].
 
 [Alternative Plugins]: #alternative-plugins
