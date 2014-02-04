@@ -7,6 +7,13 @@
 " let g:JSLintHighlightErrorLine = 0
 " in your .vimrc
 "
+" g:JSLintUpdateProfile [String; default='thorough']:
+"   Determines when updates to JSLint's state will happen.
+"   'thorough': Update on virtually all events which can change the buffer.
+"   'onwrite':  Just update when the buffer is written.
+"   This variable determines the setting for new buffers;
+"   to choose an update mode for existing buffers, use `:JSLintUpdateMode`.
+
 if exists("b:did_jslint_plugin")
   finish
 else
@@ -15,26 +22,139 @@ endif
 
 let s:install_dir = expand('<sfile>:p:h')
 
-au BufLeave <buffer> call s:JSLintClear()
-
-au BufEnter <buffer> call s:JSLint()
-au InsertLeave <buffer> call s:JSLint()
-"au InsertEnter <buffer> call s:JSLint()
-au BufWritePost <buffer> call s:JSLint()
-
-" due to http://tech.groups.yahoo.com/group/vimdev/message/52115
-if(!has("win32") || v:version>702)
-  au CursorHold <buffer> call s:JSLint()
-  au CursorHoldI <buffer> call s:JSLint()
-
-  au CursorHold <buffer> call s:GetJSLintMessage()
-endif
-
-au CursorMoved <buffer> call s:GetJSLintMessage()
 
 if !exists("g:JSLintHighlightErrorLine")
   let g:JSLintHighlightErrorLine = 1
 endif
+
+if !exists('g:JSLintUpdateProfile')
+  let g:JSLintUpdateProfile = 'thorough'
+endif
+
+
+if !exists('s:update')
+  " Controls the overall update functionality:
+  " which autocommands and mappings will trigger hooks.
+  " The command JSLintUpdateMode
+  " controls which update mode is used for the current buffer.
+  " g:JSLintUpdateProfile will be used by default.
+  let s:update = {}
+
+  " Each profile must contain a Setup method
+  " and can contain a Cleanup function.
+  let s:update.profiles = { 'thorough': {}
+        \                 , 'onwrite':  {}
+        \                 }
+
+  " Returns [profile_name, profile].
+  " a:1, if given, will select the profile.
+  " Otherwise, it will default to `g:JSLintUpdateProfile`
+  " unless there is a buffer profile already set.
+  function s:update.GetProfile(...)
+    let profile_name = a:0 ? a:1
+          \ : exists('b:jslint_update_profile') ? b:jslint_update_profile
+          \   : g:JSLintUpdateProfile
+
+    if !exists('self.profiles[profile_name]')
+      throw printf('Non-existent JSLint update profile "%s"', profile_name)
+    endif
+
+    return [profile_name, s:update.profiles[profile_name]]
+  endfunction
+
+  " Change the profile used for this buffer to a new one.
+  " Parameters as GetProfile.
+  " It calls the current profile's cleanup routine if it exists.
+  " Autocommands are cleaned up in addition to the effects of that call.
+  " `b:jslint_update_profile` is updated
+  " with the name of the selected profile.
+  function s:update.SelectProfile(...)
+    let current = self.GetProfile()[1]
+
+    let [profile_name, profile] = call(self.GetProfile, a:000, self)
+
+    if exists('b:jslint_update_profile')
+          \ && b:jslint_update_profile == profile_name
+      return
+    endif
+
+    if exists('b:jslint_update_profile')
+      au! jslint * <buffer>
+      if exists('*current.Cleanup')
+        call current.Cleanup()
+        unlet b:jslint_update_profile
+      endif
+    endif
+
+    try
+      let b:jslint_update_profile = profile_name
+      augroup jslint
+      call profile.Setup()
+    finally
+      augroup END
+    endtry
+  endfunction
+
+  " Profiles
+    function s:update.profiles.thorough.Setup()
+      au BufLeave <buffer> call s:JSLintClear()
+
+      au BufEnter <buffer> call s:JSLint()
+      au InsertLeave <buffer> call s:JSLint()
+      "au InsertEnter <buffer> call s:JSLint()
+      au BufWritePost <buffer> call s:JSLint()
+
+      " due to http://tech.groups.yahoo.com/group/vimdev/message/52115
+      if(!has("win32") || v:version>702)
+        au CursorHold <buffer> call s:JSLint()
+        au CursorHoldI <buffer> call s:JSLint()
+
+        au CursorHold <buffer> call s:GetJSLintMessage()
+      endif
+
+      au CursorMoved <buffer> call s:GetJSLintMessage()
+
+      noremap <buffer><silent> dd dd:JSLintUpdate<CR>
+      noremap <buffer><silent> dw dw:JSLintUpdate<CR>
+      noremap <buffer><silent> u u:JSLintUpdate<CR>
+      noremap <buffer><silent> <C-R> <C-R>:JSLintUpdate<CR>
+    endfunct
+
+    " Handle cleanup except for autocommands
+    function s:update.profiles.thorough.Cleanup()
+      let mappings = ['dd', 'dw', 'u', '<C-R>']
+      for mapping in mappings
+        try
+          exec 'unmap <buffer>' mapping
+        catch /^E31:/
+        endtry
+      endfor
+    endfunction
+
+    function s:update.profiles.onwrite.Setup()
+      au BufWrite <buffer> call s:JSLint()
+
+      au CursorMoved <buffer> call s:GetJSLintMessage()
+
+      call s:JSLint()
+    endfunction
+
+
+  " :JSLintUpdateMode
+  " Displays or switches the update profile for this buffer.
+  function s:CompleteUpdateProfiles(...)
+    return join(keys(s:update.profiles), "\n")
+  endfunction
+endif
+
+if exists(':JSLintUpdateMode') != 2
+  command -buffer -complete=custom,s:CompleteUpdateProfiles -nargs=?
+        \ JSLintUpdateMode
+        \ exec <q-args> == ''
+        \   ? 'echo s:update.GetProfile()[0]'
+        \   : 'call s:update.SelectProfile(<f-args>)'
+endif
+
 
 if !exists("*s:JSLintUpdate")
   function s:JSLintUpdate()
@@ -43,18 +163,13 @@ if !exists("*s:JSLintUpdate")
   endfunction
 endif
 
-if !exists(":JSLintUpdate")
+if exists(":JSLintUpdate") != 2
   command JSLintUpdate :call s:JSLintUpdate()
 endif
 if !exists(":JSLintToggle")
   command JSLintToggle exec ":let b:jslint_disabled = exists('b:jslint_disabled') ? b:jslint_disabled ? 0 : 1 : 1" |
     \                  echo 'JSLint ' . ['enabled', 'disabled'][b:jslint_disabled] . '.'
 endif
-
-noremap <buffer><silent> dd dd:JSLintUpdate<CR>
-noremap <buffer><silent> dw dw:JSLintUpdate<CR>
-noremap <buffer><silent> u u:JSLintUpdate<CR>
-noremap <buffer><silent> <C-R> <C-R>:JSLintUpdate<CR>
 
 " Set up command and parameters
 if has("win32")
@@ -305,3 +420,5 @@ if !exists("*s:ActivateJSLintQuickFixWindow")
     endfunction
 endif
 
+
+exec 'JSLintUpdateMode' g:JSLintUpdateProfile
