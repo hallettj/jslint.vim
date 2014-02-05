@@ -4,11 +4,16 @@ var fs, vm, sandbox, jslintCore = 'jslint-core.js';
 
 if (typeof require !== 'undefined') {
     print = require('util').puts;
-    fs = require('fs');
-    vm = require('vm');
-    sandbox = {};
-    res = vm.runInNewContext(fs.readFileSync(jslintCore), sandbox, jslintCore);
-    JSLINT = sandbox.JSLINT;
+    try {
+        JSLINT = require('jslint');
+    }
+    catch( ex ) {
+        fs = require('fs');
+        vm = require('vm');
+        sandbox = {};
+        res = vm.runInNewContext(fs.readFileSync(jslintCore), sandbox, jslintCore);
+        JSLINT = sandbox.JSLINT;
+    }
 } else {
     load('jslint-core.js');
 }
