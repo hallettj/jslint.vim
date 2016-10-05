@@ -76,7 +76,7 @@ var readSTDIN = (function() {
 })();
 
 readSTDIN(function(body) {
-    var ok = JSLINT(body)
+    var ok = JSLINT(body, {indent: 2})
       , i
       , error
       , errorType

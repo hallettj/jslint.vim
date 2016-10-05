@@ -21,7 +21,7 @@ var readSTDIN = function() {
 };
 
 var body = readSTDIN() || arguments[0],
-    ok = JSLINT(body),
+    ok = JSLINT(body, {indent: 2}),
     i,
     error,
     errorType,
