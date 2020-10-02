@@ -7,7 +7,7 @@ the actively developed forks of this project:
 [wookiehangover/jshint.vim]: https://github.com/wookiehangover/jshint.vim
 [FuDesign2008/jslint.vim]: https://github.com/FuDesign2008/jslint.vim
 
-jslint.vim
+*jslint.vim*
 =============
 
 Vim plugin and command line tool for running [JSLint][].
